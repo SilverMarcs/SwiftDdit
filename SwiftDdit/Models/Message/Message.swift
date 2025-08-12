@@ -35,7 +35,7 @@ struct Message: Codable, Identifiable, Hashable {
         hasher.combine(id)
     }
     
-    enum CodingKeys: String, @preconcurrency CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
         case subject
         case author

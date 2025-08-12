@@ -45,9 +45,9 @@ struct SettingsView: View {
                                 Image(systemName: "trash")
                             }
                             
-                            Spacer()
-                            
-                            Text("{Cache Size}")
+//                            Spacer()
+//                            
+//                            Text("{Cache Size}")
                         }
                         .contentShape(.rect)
                     }
