@@ -13,6 +13,8 @@ struct LinkButton: View {
     let iconColor: Color
     let action: () -> Void
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     var body: some View {
         Button(action: action) {
             HStack {
@@ -37,7 +39,7 @@ struct LinkButton: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(.background.secondary)
+                .fill(colorScheme == .light ? AnyShapeStyle(.background.tertiary) : AnyShapeStyle(.background.secondary))
         )
     }
 }
