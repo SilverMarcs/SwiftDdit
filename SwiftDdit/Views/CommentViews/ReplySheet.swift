@@ -19,14 +19,11 @@ struct ReplySheet: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            Form {
                 TextField(isTopLevel ? "Write a comment..." : "Write your reply...", text: $replyText, axis: .vertical)
-                
-                Spacer()
+                    .focused($isTextFieldFocused)
             }
-            .padding()
-            .textFieldStyle(.plain)
-            .focused($isTextFieldFocused)
+            .contentMargins(.top, 10)
             .navigationTitle("Reply to \(isTopLevel ? "post" : "comment")")
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
