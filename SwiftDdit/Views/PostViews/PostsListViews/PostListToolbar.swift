@@ -12,14 +12,14 @@ struct PostListToolbar: ToolbarContent {
     @Binding var selectedSort: SubListingSortOption
     
     var body: some ToolbarContent {
-        ToolbarItemGroup(placement: .primaryAction) {
+        ToolbarItem(placement: .primaryAction) {
             if feedType.canSort {
                 SortMenuButton(selectedSort: $selectedSort)
             }
+        }
             
-            if let subreddit = feedType.subreddit, subreddit.isDetailed {
-                SubredditInfoButton(subreddit: subreddit)
-            }
+        if let subreddit = feedType.subreddit, subreddit.isDetailed {
+            SubredditInfoButton(subreddit: subreddit)
         }
     }
 }

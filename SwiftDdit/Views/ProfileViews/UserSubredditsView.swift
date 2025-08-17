@@ -13,7 +13,7 @@ struct UserSubredditsView: View {
     @State private var isLoading = false
     @State private var showSettings = false
     
-//    @Namespace private var transition
+    @Namespace private var transition
 
     var body: some View {
         List {
@@ -47,9 +47,8 @@ struct UserSubredditsView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .sheet(isPresented: $showSettings) {
             SettingsView()
-//                .navigationTransition(
-//                   .zoom(sourceID: "settings", in: transition)
-//               )
+                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
+                .presentationDetents([.medium])
         }
         #if !os(macOS)
         .toolbar {
@@ -60,9 +59,7 @@ struct UserSubredditsView: View {
                     Image(systemName: "gear")
                 }
             }
-//            .matchedTransitionSource(
-//                id: "info", in: transition
-//            )
+            .matchedTransitionSource(id: "settings-button", in: transition)
         }
         #endif
     }

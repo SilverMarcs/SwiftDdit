@@ -8,25 +8,30 @@
 import SwiftUI
 import CachedAsyncImage
 
-struct SubredditInfoButton: View {
+struct SubredditInfoButton: ToolbarContent {
     let subreddit: Subreddit
     @State private var showingSubredditInfo = false
+    @Namespace private var transition
     
-    var body: some View {
-        Button {
-            showingSubredditInfo = true
-        } label: {
-            if let url = URL(string: subreddit.iconURL ?? "") {
-                CachedAsyncImage(url: url, targetSize: CGSize(width: 50, height: 50))
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "info.circle")
-                    .tint(subreddit.color ?? .blue)
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .primaryAction) {
+            Button {
+                showingSubredditInfo = true
+            } label: {
+                if let url = URL(string: subreddit.iconURL ?? "") {
+                    CachedAsyncImage(url: url, targetSize: CGSize(width: 50, height: 50))
+                        .frame(width: 30, height: 30)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "info.circle")
+                        .tint(subreddit.color ?? .blue)
+                }
+            }
+            .sheet(isPresented: $showingSubredditInfo) {
+                SubredditInfoView(subreddit: subreddit)
+                    .navigationTransition(.zoom(sourceID: "subreddit-info-\(subreddit.id)", in: transition))
             }
         }
-        .sheet(isPresented: $showingSubredditInfo) {
-            SubredditInfoView(subreddit: subreddit)
-        }
+        .matchedTransitionSource(id: "subreddit-info-\(subreddit.id)", in: transition)
     }
 }

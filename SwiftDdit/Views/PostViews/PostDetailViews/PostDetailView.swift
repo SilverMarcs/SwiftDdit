@@ -11,7 +11,6 @@ struct PostDetailView: View {
     @Environment(\.appendToPath) var appendToPath
     
     @State private var dataSource: PostDetailDataSource
-    @State private var showCommentSheet = false
     
     init(post: Post) {
         self._dataSource = State(initialValue: PostDetailDataSource(post: post))
@@ -28,7 +27,7 @@ struct PostDetailView: View {
                     PostView(
                         post: post,
                         isCompact: false,
-                        onReplyTap: { showCommentSheet = true }
+                        addOptimisticTopLevelComment: dataSource.addOptimisticTopLevelComment
                     )
                     
                     Divider()
@@ -108,13 +107,6 @@ struct PostDetailView: View {
                         .labelStyle(.iconOnly)
                 }
                 .tint(.accent)
-            }
-        }
-        .sheet(isPresented: $showCommentSheet) {
-            if let post = dataSource.post {
-                ReplySheet(parentId: post.id, isTopLevel: true) { text, postId in
-                    dataSource.addOptimisticTopLevelComment(text: text, postId: postId)
-                }
             }
         }
     }

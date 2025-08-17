@@ -11,13 +11,16 @@ struct PostView: View {
     @Environment(\.appendToPath) var appendToPath
     let post: Post
     var isCompact: Bool = true
-    var onReplyTap: (() -> Void)? = nil
-    @State private var isSaved: Bool
+    var addOptimisticTopLevelComment: ((String, String) -> Void)? = nil
     
-    init(post: Post, isCompact: Bool = true, onReplyTap: (() -> Void)? = nil) {
+    @State private var isSaved: Bool
+    @State private var showCommentSheet = false
+    @Namespace private var transition
+    
+    init(post: Post, isCompact: Bool = true, addOptimisticTopLevelComment: ((String, String) -> Void)? = nil) {
         self.post = post
         self.isCompact = isCompact
-        self.onReplyTap = onReplyTap
+        self.addOptimisticTopLevelComment = addOptimisticTopLevelComment
         self._isSaved = State(initialValue: post.saved)
     }
     
@@ -83,15 +86,16 @@ struct PostView: View {
               
               Spacer()
               
-              if let onReplyTap = onReplyTap {
+              if !isCompact {
                   Button {
-                      onReplyTap()
+                      showCommentSheet = true
                   } label: {
                       Image(systemName: "arrowshape.turn.up.backward.fill")
                           .font(.headline)
                           .foregroundStyle(.accent)
                           .padding(3)
                   }
+                  .matchedTransitionSource(id: "reply-button", in: transition)
                   .buttonStyle(.glass)
                   .buttonBorderShape(.circle)
               } else {
@@ -131,6 +135,15 @@ struct PostView: View {
         } preview: {
             CompactPostView(post: post)
                 .padding(15)
+        }
+        .sheet(isPresented: $showCommentSheet) {
+            if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {
+                ReplySheet(parentId: post.id, isTopLevel: true) { text, postId in
+                    addOptimisticTopLevelComment(text, postId)
+                }
+                .navigationTransition(.zoom(sourceID: "reply-button", in: transition))
+//                .presentationDetents([.fraction(0.7)])
+            }
         }
     }
     
