@@ -28,7 +28,6 @@ struct FullscreenVideoOverlay: View {
     var viewModel: VideoOverlayViewModel = .shared
     @State private var dragOffset: CGSize = .zero
     @State private var isDragging = false
-//    @State private var isSaving = false
     
     var body: some View {
         if viewModel.isPresented, let player = viewModel.player {
@@ -37,18 +36,11 @@ struct FullscreenVideoOverlay: View {
                 Color.black
                     .ignoresSafeArea()
                 
-                // Draggable VideoPlayer
+                // VideoPlayer with gesture overlay
                 VideoPlayer(player: player)
                     .matchedGeometryEffect(id: viewModel.currentVideoURL ?? "videoPlayer", in: videoNS ?? fallbackNS)
-                    .offset(dragOffset)
-//                    #if !os(macOS)
-//                    .overlay(alignment: .bottomTrailing) {
-//                        SaveVideoButton(videoURL: viewModel.currentVideoURL ?? "", isSaving: $isSaving)
-//                            .padding()
-//                    }
-//                    #endif
-                    .gesture(
-                        DragGesture()
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 15)
                             .onChanged { value in
                                 isDragging = true
                                 // Only allow downward dragging
@@ -59,17 +51,17 @@ struct FullscreenVideoOverlay: View {
                             .onEnded { value in
                                 isDragging = false
                                 
-                                // If dragged down more than 100 points, dismiss
                                 if value.translation.height > 70 {
                                     dismissVideo()
                                 } else {
-                                    // Spring back to original position
                                     withAnimation(.easeInOut(duration: 0.4)) {
                                         dragOffset = .zero
                                     }
                                 }
                             }
                     )
+                    
+                .offset(dragOffset)
             }
             .onChange(of: viewModel.isPresented) { oldValue, newValue in
                 if !newValue {

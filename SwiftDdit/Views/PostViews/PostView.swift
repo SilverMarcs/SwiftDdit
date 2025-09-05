@@ -135,6 +135,7 @@ struct PostView: View {
         } preview: {
             CompactPostView(post: post)
                 .padding(15)
+                .frame(maxWidth: 400)
         }
         .sheet(isPresented: $showCommentSheet) {
             if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {

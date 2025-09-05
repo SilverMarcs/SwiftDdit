@@ -11,6 +11,7 @@ import CachedAsyncImage
 struct CompactPostView: View {
     @Environment(\.appendToPath) var appendToPath
     let post: Post
+    var isPreview: Bool = false
     
     var body: some View {
         Button {

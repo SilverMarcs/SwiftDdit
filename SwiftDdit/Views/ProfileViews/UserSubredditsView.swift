@@ -47,8 +47,7 @@ struct UserSubredditsView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .sheet(isPresented: $showSettings) {
             SettingsView()
-                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
-                .presentationDetents([.medium])
+//                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
         }
         #if !os(macOS)
         .toolbar {

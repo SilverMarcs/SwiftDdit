@@ -22,9 +22,14 @@ struct PostVideoView: View {
 //            .transition(.scale(scale: 1))
             .cornerRadius(12)
             .clipped()
-            .onTapGesture {
-                VideoOverlayViewModel.shared.present(player: player, videoURL: videoURL)
-            }
+            .overlay(
+                Rectangle()
+                    .fill(Color.clear)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        VideoOverlayViewModel.shared.present(player: player, videoURL: videoURL)
+                    }
+            )
             .task {
                 await setupPlayer()
             }
