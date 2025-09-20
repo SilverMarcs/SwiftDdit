@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PostsList: View {
     @Environment(\.appendToPath) var appendToPath
+    @Environment(\.isSearching) var isSearching
     @State private var dataSource: PostListDataSource
     
     private let feedType: PostFeedType
@@ -39,7 +40,7 @@ struct PostsList: View {
             Color.clear
                 .frame(height: 1)
                 .onAppear {
-                    if !dataSource.isLoading && dataSource.after != nil {
+                    if !dataSource.isLoading && dataSource.after != nil && dataSource.searchText.isEmpty {
                         Task {
                             await dataSource.loadMorePosts()
                         }
@@ -74,6 +75,23 @@ struct PostsList: View {
         }
         .toolbar {
             PostListToolbar(feedType: feedType, selectedSort: $dataSource.currentSort)
+        }
+        .if(feedType.supportsSearch) { view in
+            view
+                .searchable(text: $dataSource.searchText, prompt: "Search \(feedType.subreddit?.displayNamePrefixed ?? "")")
+                .onSubmit(of: .search) {
+                    let query = dataSource.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !query.isEmpty {
+                        Task {
+                            await dataSource.searchPosts(query)
+                        }
+                    }
+                }
+                .task(id: dataSource.searchText) {
+                    if dataSource.searchText.isEmpty {
+                        await dataSource.loadInitialPosts()
+                    }
+                }
         }
     }
 }

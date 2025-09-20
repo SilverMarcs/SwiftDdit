@@ -67,7 +67,8 @@ struct SearchView: View {
                     subredditResults = []
                     postResults = []
                 } label: {
-                    Image(systemName: "eraser")
+//                    Image(systemName: "eraser")
+                    Text("Clear")
                 }
                 .disabled(searchText.isEmpty && searchResults.isEmpty)
             }

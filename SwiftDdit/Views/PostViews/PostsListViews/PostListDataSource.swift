@@ -13,6 +13,7 @@ import Foundation
     private(set) var isLoading = false
     @ObservationIgnored private(set) var after: String?
     var currentSort: SubListingSortOption = .best
+    var searchText = ""
     
     @ObservationIgnored private let feedType: PostFeedType
     
@@ -23,6 +24,7 @@ import Foundation
     func loadInitialPosts() async {
         guard !isLoading else { return }
         posts = []
+        searchText = ""  // Clear search when loading initial posts
         
         isLoading = true
         await fetchPosts(isRefresh: true)
@@ -41,18 +43,42 @@ import Foundation
         await fetchPosts(isRefresh: true)
     }
     
+    func searchPosts(_ query: String) async {
+        guard feedType.supportsSearch else { return }
+        guard !isLoading else { return }
+        
+        searchText = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        posts = []
+        after = nil
+        
+        isLoading = true
+        await fetchPosts(isRefresh: true)
+        isLoading = false
+    }
+    
     private func fetchPosts(isRefresh: Bool) async {
         let afterParam = isRefresh ? nil : after
-        let sortParam = feedType.canSort ? currentSort : .best
         
-        let result = await RedditAPI.fetchPosts(
-            for: feedType,
-            sort: sortParam,
-            after: afterParam,
-            limit: 20
-        )
-        
-        if let (newPosts, newAfter) = result {
+        if !searchText.isEmpty {
+            let subredditName = feedType.subreddit?.displayName
+            let searchResults = await RedditAPI.searchPosts(searchText, subreddit: subredditName, limit: 20)
+            guard let searchResults else { return }
+            
+            posts.append(contentsOf: searchResults)
+            // Search doesn't support pagination in the same way, so we reset after
+            after = nil
+        } else {
+            // Regular mode: use normal post fetching
+            let sortParam = feedType.canSort ? currentSort : .best
+            
+            let result = await RedditAPI.fetchPosts(
+                for: feedType,
+                sort: sortParam,
+                after: afterParam,
+                limit: 20
+            )
+            
+            guard let (newPosts, newAfter) = result else { return }
             if isRefresh {
                 posts = newPosts
             } else {
@@ -61,8 +87,6 @@ import Foundation
                 posts.append(contentsOf: uniqueNewPosts)
             }
             after = newAfter
-        } else {
-            print("Failed to load posts. Check your connection and credentials.")
         }
     }
 }
