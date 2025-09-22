@@ -45,9 +45,26 @@ extension RedditAPI {
     }
     
     static func fetchUserSubreddits() async -> [Subreddit]? {
-        guard let url = URL(string: "\(Self.redditApiURLBase)/subreddits/mine/subscriber.json?limit=100"),
-              let response = await performAuthenticatedRequest(url: url, responseType: Listing<SubredditData>.self) else { return nil }
+        var allSubreddits: [Subreddit] = []
+        var after: String? = nil
         
-        return response.data.children.compactMap { Subreddit(data: $0.data) }
+        repeat {
+            var urlString = "\(Self.redditApiURLBase)/subreddits/mine/subscriber.json?limit=100"
+            if let afterToken = after {
+                urlString += "&after=\(afterToken)"
+            }
+            
+            guard let url = URL(string: urlString),
+                  let response = await performAuthenticatedRequest(url: url, responseType: Listing<SubredditData>.self) else {
+                return nil
+            }
+            
+            let newSubs = response.data.children.compactMap { Subreddit(data: $0.data) }
+            allSubreddits.append(contentsOf: newSubs)
+            
+            after = response.data.after
+        } while after != nil
+        
+        return allSubreddits
     }
 }

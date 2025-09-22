@@ -38,6 +38,7 @@ struct PostActionsView: View {
             }
             .buttonStyle(.plain)
         }
+        .lineLimit(1)
         .fontWeight(.semibold)
         .padding(8)
         .glassEffect(.regular.interactive())
