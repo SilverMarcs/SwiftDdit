@@ -68,9 +68,8 @@ struct ImageModal: View {
         .ignoresSafeArea()
         .tabViewStyle(.page)
         .navigationTransition(.zoom(sourceID: sourceID, in: imageNS ?? fallbackNS))
-        .overlay(alignment: .bottomTrailing) {
+        .toolbar {
             SaveImageButton(imageURL: images[currentIndex].url)
-                .padding()
         }
         #endif
     }
