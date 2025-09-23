@@ -14,6 +14,7 @@ struct CommentView: View {
     
     @Environment(\.addOptimisticComment) var addOptimisticComment
     @State private var showReplySheet = false
+    @State private var showTextSelection = false
     
     private let maxDepth = 8
     
@@ -69,6 +70,15 @@ struct CommentView: View {
             } label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left")
             }
+            
+            Button {
+                showTextSelection.toggle()
+            } label: {
+                Label("Select text", systemImage: "selection.pin.in.out")
+            }
+        }
+        .sheet(isPresented: $showTextSelection) {
+            TextSelectionView(content: comment.body)
         }
         .sheet(isPresented: $showReplySheet) {
             ReplySheet(parentId: comment.id, isTopLevel: false) { text, parentId in

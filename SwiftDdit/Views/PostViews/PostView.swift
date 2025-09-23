@@ -14,6 +14,7 @@ struct PostView: View {
     var addOptimisticTopLevelComment: ((String, String) -> Void)? = nil
     
     @State private var isSaved: Bool
+    @State private var showTextSelection: Bool = false
     @State private var showCommentSheet = false
     @Namespace private var transition
     
@@ -86,34 +87,37 @@ struct PostView: View {
               
               Spacer()
               
-              if !isCompact {
-                  Button {
-                      showCommentSheet = true
-                  } label: {
-                      Image(systemName: "arrowshape.turn.up.backward.fill")
-                          .font(.headline)
-                          .foregroundStyle(.accent)
-                          .padding(3)
+              GlassEffectContainer {
+                  if !isCompact {
+                      Button {
+                          showCommentSheet = true
+                      } label: {
+                          Image(systemName: "arrowshape.turn.up.backward.fill")
+                              .font(.headline)
+                              .foregroundStyle(.accent)
+                              .padding(3)
+                      }
+                      .matchedTransitionSource(id: "reply-button", in: transition)
+                      .buttonStyle(.glass)
+                      .buttonBorderShape(.circle)
                   }
-                  .matchedTransitionSource(id: "reply-button", in: transition)
-                  .buttonStyle(.glass)
-                  .buttonBorderShape(.circle)
-              } else {
+                  
                   toggleSaveButton
                       .font(.headline)
                       .labelStyle(.iconOnly)
                       .buttonStyle(.glass)
                       .controlSize(.regular)
+                      .buttonBorderShape(.circle)
+                  
+                  PostActionsView(post: post)
               }
-              
-              PostActionsView(post: post)
             }
         }
         .padding(.horizontal, isCompact ? 12 : 0)
         .padding(.vertical, isCompact ? 12 : 0)
         .background(isCompact ? AnyShapeStyle(.background.secondary) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 16))
         .contextMenu {
-          Section {
+            Section {
               Button {
                   appendToPath(PostFeedType.user(post.author))
               } label: {
@@ -123,19 +127,30 @@ struct PostView: View {
                       Image(systemName: "person")
                   }
               }
-          }
+            }
             
-        toggleSaveButton
+            if !isCompact {
+                Button {
+                    showTextSelection.toggle()
+                } label: {
+                    Label("Select text", systemImage: "selection.pin.in.out")
+                }
+            }
+            
+            toggleSaveButton
 
-          if let redditURL = post.redditURL {
+            if let redditURL = post.redditURL {
               ShareLink(item: redditURL) {
                   Label("Share", systemImage: "square.and.arrow.up")
               }
-          }
+            }
         } preview: {
             CompactPostView(post: post)
                 .padding(15)
                 .frame(maxWidth: 400)
+        }
+        .sheet(isPresented: $showTextSelection) {
+            TextSelectionView(content: post.selftext)
         }
         .sheet(isPresented: $showCommentSheet) {
             if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {
