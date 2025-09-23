@@ -87,9 +87,12 @@ struct PostsList: View {
                         }
                     }
                 }
-                .task(id: dataSource.searchText) {
+                .onChange(of: dataSource.searchText) {
+//                .task(id: dataSource.searchText) {
                     if dataSource.searchText.isEmpty {
-                        await dataSource.loadInitialPosts()
+                        Task {
+                            await dataSource.loadInitialPosts()
+                        }
                     }
                 }
         }
