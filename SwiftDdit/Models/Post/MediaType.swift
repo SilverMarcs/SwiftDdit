@@ -21,22 +21,6 @@ struct GalleryImage: Hashable, Identifiable {
     }
 }
 
-struct ImageModalData: Hashable, Identifiable {
-    var id = UUID()
-    let images: [GalleryImage]
-    let startIndex: Int
-    
-    init(images: [GalleryImage], startIndex: Int) {
-        self.images = images
-        self.startIndex = startIndex
-    }
-    
-    init(image: GalleryImage) {
-        self.images = [image]
-        self.startIndex = 0
-    }
-}
-
 struct LinkMetadata: Hashable {
     let url: String
     let domain: String
