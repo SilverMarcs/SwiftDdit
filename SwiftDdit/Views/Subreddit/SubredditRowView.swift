@@ -24,7 +24,7 @@ struct SubredditRowView: View {
                     }
                 } icon : {
                     if let iconURL = subreddit.iconURL, let url = URL(string: iconURL) {
-                        CachedAsyncImage(url: url, targetSize: CGSize(width: 50, height: 50))
+                        CachedAsyncImage(url: url, targetSize: 50)
                             .foregroundStyle(subreddit.color ?? .secondary)
                             .clipShape(Circle())
                             .frame(width: 32, height: 32)

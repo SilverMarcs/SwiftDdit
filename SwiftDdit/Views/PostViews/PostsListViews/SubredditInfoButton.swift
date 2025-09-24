@@ -19,7 +19,7 @@ struct SubredditInfoButton: ToolbarContent {
                 showingSubredditInfo = true
             } label: {
                 if let url = URL(string: subreddit.iconURL ?? "") {
-                    CachedAsyncImage(url: url, targetSize: CGSize(width: 50, height: 50))
+                    CachedAsyncImage(url: url, targetSize: 50)
                         .frame(width: 30, height: 30)
                         .clipShape(Circle())
                 } else {

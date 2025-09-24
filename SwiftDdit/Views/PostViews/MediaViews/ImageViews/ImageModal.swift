@@ -30,7 +30,7 @@ struct ImageModal: View {
         ZStack {
             // Current Image
             if let currentImage = images[safe: currentIndex] {
-                CachedAsyncImage(url: URL(string: currentImage.url)!, targetSize: CGSize(width: 500, height: 500))
+                CachedAsyncImage(url: URL(string: currentImage.url)!, targetSize: 50)
                     .aspectRatio(contentMode: .fit)
                     .zoomable()
             }
@@ -58,7 +58,7 @@ struct ImageModal: View {
         #else
         TabView(selection: $currentIndex) {
             ForEach(Array(images.enumerated()), id: \.offset) { index, galleryImage in
-                CachedAsyncImage(url: URL(string: galleryImage.url)!, targetSize: CGSize(width: 500, height: 500))
+                CachedAsyncImage(url: URL(string: galleryImage.url)!, targetSize: 500)
                     .aspectRatio(contentMode: .fit)
                     .zoomable()
                     .tag(index)

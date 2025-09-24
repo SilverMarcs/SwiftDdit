@@ -21,7 +21,7 @@ struct PostImageView: View {
             Button {
                 imageModalData = ImageModalData(image: image)
             } label: {
-                CachedAsyncImage(url: url, targetSize: CGSize(width: 500, height: 500))
+                CachedAsyncImage(url: url, targetSize: 500)
                     .aspectRatio(image.aspectRatio, contentMode: .fit)
                     .matchedTransitionSource(id: image.url, in: imageNS ?? fallbackNS)
                     .cornerRadius(12)

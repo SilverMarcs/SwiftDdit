@@ -56,7 +56,7 @@ struct CompactPostView: View {
                 Spacer()
                 
                 if let url = post.mediaType.firstMediaURL, let mediaURL = URL(string: url) {
-                    CachedAsyncImage(url: mediaURL, targetSize: CGSize(width: 500, height: 500))
+                    CachedAsyncImage(url: mediaURL, targetSize: 500)
                         .frame(width: 70, height: 70)
                         .cornerRadius(12)
                         .clipped()

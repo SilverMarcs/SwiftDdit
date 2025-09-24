@@ -33,37 +33,38 @@ struct SaveImageButton: View {
   }
 
   private func saveImage() async {
-    guard let url = URL(string: imageURL) else { return }
-
-    isSaving = true
-    defer { isSaving = false }
-
-    do {
-      // 1) Try cache first
-      let image: OSImage
-      if let cached = await MemoryCache.shared.get(for: imageURL) {
-        image = cached
-      } else {
-        // 2) Otherwise download
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        guard let ui = OSImage(data: data) else {
-          throw NSError(domain: "SaveImage", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid image data"])
-        }
-        image = ui
-      }
-
-      // 3) Write into the Photos library
-      try await PHPhotoLibrary.shared().performChanges {
-        @Sendable in
-        PHAssetChangeRequest.creationRequestForAsset(from: image)
-      }
-
-      // (optional) brief success feedback
-      try? await Task.sleep(nanoseconds: 500_000_000)
-    }
-    catch {
-      print("❌ Failed to save image:", error)
-    }
+      print("TBI")
+//    guard let url = URL(string: imageURL) else { return }
+//
+//    isSaving = true
+//    defer { isSaving = false }
+//
+//    do {
+//      // 1) Try cache first
+//      let image: OSImage
+//      if let cached = await MemoryCache.shared.get(for: imageURL) {
+//        image = cached
+//      } else {
+//        // 2) Otherwise download
+//        let (data, _) = try await URLSession.shared.data(from: url)
+//        
+//        guard let ui = OSImage(data: data) else {
+//          throw NSError(domain: "SaveImage", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid image data"])
+//        }
+//        image = ui
+//      }
+//
+//      // 3) Write into the Photos library
+//      try await PHPhotoLibrary.shared().performChanges {
+//        @Sendable in
+//        PHAssetChangeRequest.creationRequestForAsset(from: image)
+//      }
+//
+//      // (optional) brief success feedback
+//      try? await Task.sleep(nanoseconds: 500_000_000)
+//    }
+//    catch {
+//      print("❌ Failed to save image:", error)
+//    }
   }
 }

@@ -25,7 +25,7 @@ struct SubredditButton: View {
                     .foregroundStyle(subreddit.color ?? .blue)
             case .icon(let iconURL):
                 if let url = URL(string: iconURL) {
-                    CachedAsyncImage(url: url, targetSize: CGSize(width: 50, height: 50))
+                    CachedAsyncImage(url: url, targetSize: 50)
                         .frame(width: 32, height: 32)
                         .clipShape(Circle())
                 } else {
