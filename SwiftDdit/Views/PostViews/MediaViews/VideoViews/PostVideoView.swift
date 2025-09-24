@@ -8,18 +8,18 @@ struct PostVideoView: View {
     @AppStorage("autoplay") var autoplay: Bool = true
     @AppStorage("muteOnPlay") var muteOnPlay: Bool = true
     
-    let videoURL: String?
-    let thumbnailURL: String?
+    let videoURL: String
     let dimensions: CGSize?
 
+    @State private var showModal = false
+    
     @State private var player: AVPlayer?
     @State private var playerLooper: AVPlayerLooper?
 
     var body: some View {
         VideoPlayer(player: player)
             .aspectRatio(dimensions != nil ? (dimensions!.width / dimensions!.height) : 16/9, contentMode: .fit)
-            .matchedGeometryEffect(id: videoURL ?? "videoPlayer", in: videoNS ?? fallbackNS)
-//            .transition(.scale(scale: 1))
+            .matchedGeometryEffect(id: videoURL, in: videoNS ?? fallbackNS)
             .cornerRadius(12)
             .clipped()
             .overlay(
@@ -27,7 +27,7 @@ struct PostVideoView: View {
                     .fill(Color.clear)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        VideoOverlayViewModel.shared.present(player: player, videoURL: videoURL)
+                        showModal = true
                     }
             )
             .task {
@@ -36,11 +36,15 @@ struct PostVideoView: View {
             .onDisappear {
                 cleanupPlayer()
             }
+            .fullScreenCover(isPresented: $showModal) {
+                VideoPlayer(player: player)
+                    .navigationTransition(.zoom(sourceID: videoURL, in: videoNS ?? fallbackNS))
+                    .ignoresSafeArea()
+            }
     }
     
     private func setupPlayer() async {
-        guard let videoURL = videoURL,
-              let url = URL(string: videoURL),
+        guard let url = URL(string: videoURL),
               player == nil else { return }
         
         let asset = AVURLAsset(url: url)

@@ -42,10 +42,6 @@ struct ContentView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         #endif
         .overlay {
-            FullscreenVideoOverlay()
-                .environment(\.videoNS, videoNS)
-        }
-        .overlay {
             if CredentialsManager.shared.activeCredentialId == nil {
                 ContentUnavailableView(
                     "No Account Connected",

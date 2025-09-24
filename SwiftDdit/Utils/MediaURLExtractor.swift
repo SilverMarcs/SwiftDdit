@@ -54,11 +54,8 @@ struct MediaURLExtractor {
                 urls.append(url)
             }
             
-        case .video(_, let thumbnailURL, _):
-            if let thumbnailURL = thumbnailURL,
-               let url = URL(string: thumbnailURL) {
-                urls.append(url)
-            }
+        case .video(_, _):
+            break
             
         case .link(let metadata):
             if let thumbnailURL = metadata.thumbnailURL,

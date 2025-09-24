@@ -49,16 +49,11 @@ extension Post {
         
         // PRIORITY 2: Reddit Video (HLS for high quality)
         if let videoPreview = data.preview?.reddit_video_preview,
-           let hlsURL = videoPreview.hls_url,
-           let width = videoPreview.width,
-           let height = videoPreview.height {
+           let hlsURL = videoPreview.hls_url {
             
-            let thumbnailURL = videoPreview.scrubber_media_url ?? extractImageURL(from: data)
-            let mediaType = MediaType.video(
-                videoURL: hlsURL,
-                thumbnailURL: thumbnailURL,
-                dimensions: CGSize(width: width, height: height)
-            )
+            let dimensions = (videoPreview.width != nil && videoPreview.height != nil) ? 
+                CGSize(width: videoPreview.width!, height: videoPreview.height!) : nil
+            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)
@@ -67,16 +62,11 @@ extension Post {
         }
         
         if let redditVideo = data.media?.reddit_video,
-           let hlsURL = redditVideo.hls_url,
-           let width = redditVideo.width,
-           let height = redditVideo.height {
+           let hlsURL = redditVideo.hls_url {
             
-            let thumbnailURL = redditVideo.scrubber_media_url ?? extractImageURL(from: data)
-            let mediaType = MediaType.video(
-                videoURL: hlsURL,
-                thumbnailURL: thumbnailURL,
-                dimensions: CGSize(width: width, height: height)
-            )
+            let dimensions = (redditVideo.width != nil && redditVideo.height != nil) ? 
+                CGSize(width: redditVideo.width!, height: redditVideo.height!) : nil
+            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)
@@ -126,12 +116,7 @@ extension Post {
         // PRIORITY 4: Direct video files
         let videoFormats = [".mov", ".mp4", ".avi", ".mkv", ".flv", ".wmv", ".mpg", ".mpeg", ".webm"]
         if videoFormats.contains(where: { url.hasSuffix($0) }) {
-            let thumbnailURL = extractImageURL(from: data)
-            let mediaType = MediaType.video(
-                videoURL: url,
-                thumbnailURL: thumbnailURL,
-                dimensions: nil
-            )
+            let mediaType = MediaType.video(videoURL: url, dimensions: nil)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)
