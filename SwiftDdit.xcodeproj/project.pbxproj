@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08B630F32E845D97004B53B8 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08B630F22E845D97004B53B8 /* SwiftMediaViewer */; };
 		08D5D85A2E283C910027D139 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 08D5D8592E283C910027D139 /* CachedAsyncImage */; };
 		08D5DABE2E2841AC0027D139 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 08D5DABD2E2841AC0027D139 /* CachedAsyncImage */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08B630F32E845D97004B53B8 /* SwiftMediaViewer in Frameworks */,
 				08D5D85A2E283C910027D139 /* CachedAsyncImage in Frameworks */,
 				08D5DABE2E2841AC0027D139 /* CachedAsyncImage in Frameworks */,
 			);
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				08D5D8592E283C910027D139 /* CachedAsyncImage */,
 				08D5DABD2E2841AC0027D139 /* CachedAsyncImage */,
+				08B630F22E845D97004B53B8 /* SwiftMediaViewer */,
 			);
 			productName = SwiftDdit;
 			productReference = 08846F642DFF0E1B009F6F77 /* SwiftDdit.app */;
@@ -118,6 +121,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				08D5DABC2E2841AC0027D139 /* XCRemoteSwiftPackageReference "CachedAsyncImage" */,
+				08B630F12E845D97004B53B8 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 08846F652DFF0E1B009F6F77 /* Products */;
@@ -403,6 +407,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		08B630F12E845D97004B53B8 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Frameworks/SwiftMediaViewer;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		08D5DABC2E2841AC0027D139 /* XCRemoteSwiftPackageReference "CachedAsyncImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -415,6 +426,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		08B630F22E845D97004B53B8 /* SwiftMediaViewer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftMediaViewer;
+		};
 		08D5D8592E283C910027D139 /* CachedAsyncImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CachedAsyncImage;

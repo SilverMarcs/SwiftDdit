@@ -43,7 +43,7 @@ struct SearchView: View {
         .navigationTitle("Search")
         .toolbarTitleDisplayMode(.inlineLarge)
         .searchable(text: $searchText, placement: .toolbarPrincipal, prompt: "Search \(searchScope.rawValue)")
-        .searchScopes($searchScope) {
+        .searchScopes($searchScope, activation: .onSearchPresentation) {
             ForEach(SearchScope.allCases, id: \.self) { scope in
                 Text(scope.rawValue).tag(scope)
             }

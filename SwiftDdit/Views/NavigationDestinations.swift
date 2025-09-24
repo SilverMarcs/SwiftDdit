@@ -39,14 +39,6 @@ extension View {
                 InboxView()
                     .commonDestinationModifiers(path: path)
             }
-            .navigationDestination(for: ImageModalData.self) { imageData in
-                ImageModal(imageData: imageData)
-                    .commonDestinationModifiers(path: path)
-//                    #if !os(macOS)
-//                    .toolbarVisibility(.hidden, for: .tabBar)
-//                    .toolbarVisibility(.hidden, for: .navigationBar)
-//                    #endif
-            }
     }
 }
 

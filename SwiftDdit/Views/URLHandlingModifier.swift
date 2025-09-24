@@ -18,10 +18,11 @@ struct URLHandlingModifier: ViewModifier {
                     return .systemAction(prefersInApp: true)
                 }
                 
-                if let galleryImage = detectRedditImage(from: url) {
-                    path.wrappedValue.append(ImageModalData(image: galleryImage))
-                    return .handled
-                }
+                // TODO: fix this
+//                if let galleryImage = detectRedditImage(from: url) {
+//                    path.wrappedValue.append(ImageModalData(image: galleryImage))
+//                    return .handled
+//                }
 
                 if let navPayload = parseRedditURL(url) {
                     path.wrappedValue.append(navPayload)

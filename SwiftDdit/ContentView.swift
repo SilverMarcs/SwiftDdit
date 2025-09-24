@@ -8,21 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Namespace private var imageNS
-    @Namespace private var videoNS
-    
     var body: some View {
         TabView {
             Tab("Home", systemImage: "doc.text.image") {
                 HomeTab()
-                    .environment(\.imageNS, imageNS)
-                    .environment(\.videoNS, videoNS)
             }
             
             Tab("Profile", systemImage: "person.fill") {
                 ProfileTab()
-                    .environment(\.imageNS, imageNS)
-                    .environment(\.videoNS, videoNS)
             }
             
             #if os(macOS)
@@ -33,8 +26,6 @@ struct ContentView: View {
             
             Tab(role: .search) {
                 SearchTab()
-                    .environment(\.imageNS, imageNS)
-                    .environment(\.videoNS, videoNS)
             }
         }
         .tabViewStyle(.sidebarAdaptable)
