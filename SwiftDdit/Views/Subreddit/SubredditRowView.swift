@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SwiftMediaViewer
 
 struct SubredditRowView: View {
     @Environment(\.appendToPath) var appendToPath

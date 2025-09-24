@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SwiftMediaViewer
 
 struct CompactPostView: View {
     @Environment(\.appendToPath) var appendToPath

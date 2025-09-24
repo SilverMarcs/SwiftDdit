@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SwiftMediaViewer
 
 struct SubredditInfoButton: ToolbarContent {
     let subreddit: Subreddit
@@ -29,9 +29,13 @@ struct SubredditInfoButton: ToolbarContent {
             }
             .sheet(isPresented: $showingSubredditInfo) {
                 SubredditInfoView(subreddit: subreddit)
+                    #if !os(macOS)
                     .navigationTransition(.zoom(sourceID: "subreddit-info-\(subreddit.id)", in: transition))
+                    #endif
             }
         }
+        #if !os(macOS)
         .matchedTransitionSource(id: "subreddit-info-\(subreddit.id)", in: transition)
+        #endif
     }
 }

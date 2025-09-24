@@ -1,13 +1,13 @@
 {
-  "originHash" : "afc4776a7bb3e4731297dfc1a03675b44c131340665bc66b1bba02d038c2ebf5",
+  "originHash" : "77737297761ed8d56a2ef134d1455360c437873c92a326fb0818f3916997f79c",
   "pins" : [
     {
-      "identity" : "cachedasyncimage",
+      "identity" : "swiftmediaviewer",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilverMarcs/CachedAsyncImage",
+      "location" : "https://github.com/SilverMarcs/SwiftMediaViewer",
       "state" : {
         "branch" : "main",
-        "revision" : "4b42cf1457041e65f67d777f9042da3e7ae80a44"
+        "revision" : "f84f03d0aacb8fab0cef181565c7489f1f7c4c60"
       }
     }
   ],

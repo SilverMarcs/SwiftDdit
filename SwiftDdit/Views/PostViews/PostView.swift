@@ -149,15 +149,19 @@ struct PostView: View {
                 .padding(15)
                 .frame(maxWidth: 400)
         }
+        #if !os(macOS)
         .sheet(isPresented: $showTextSelection) {
             TextSelectionView(content: post.selftext)
         }
+        #endif
         .sheet(isPresented: $showCommentSheet) {
             if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {
                 ReplySheet(parentId: post.id, isTopLevel: true) { text, postId in
                     addOptimisticTopLevelComment(text, postId)
                 }
+                #if !os(macOS)
                 .navigationTransition(.zoom(sourceID: "reply-button", in: transition))
+                #endif
 //                .presentationDetents([.fraction(0.7)])
             }
         }

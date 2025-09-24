@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SwiftMediaViewer
 
 struct PostLinkView: View {
   @Environment(\.openURL) var openURL

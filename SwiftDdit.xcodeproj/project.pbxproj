@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08B630F32E845D97004B53B8 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08B630F22E845D97004B53B8 /* SwiftMediaViewer */; };
-		08D5D85A2E283C910027D139 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 08D5D8592E283C910027D139 /* CachedAsyncImage */; };
-		08D5DABE2E2841AC0027D139 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 08D5DABD2E2841AC0027D139 /* CachedAsyncImage */; };
+		08BB35BF2E8494FF00BDF671 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08BB35BE2E8494FF00BDF671 /* SwiftMediaViewer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +20,9 @@
 			membershipExceptions = (
 				Info.plist,
 			);
+			platformFiltersByRelativePath = {
+				Views/TextSelectionView.swift = (ios, xros, );
+			};
 			target = 08846F632DFF0E1B009F6F77 /* SwiftDdit */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -42,9 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08B630F32E845D97004B53B8 /* SwiftMediaViewer in Frameworks */,
-				08D5D85A2E283C910027D139 /* CachedAsyncImage in Frameworks */,
-				08D5DABE2E2841AC0027D139 /* CachedAsyncImage in Frameworks */,
+				08BB35BF2E8494FF00BDF671 /* SwiftMediaViewer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,9 +86,7 @@
 			);
 			name = SwiftDdit;
 			packageProductDependencies = (
-				08D5D8592E283C910027D139 /* CachedAsyncImage */,
-				08D5DABD2E2841AC0027D139 /* CachedAsyncImage */,
-				08B630F22E845D97004B53B8 /* SwiftMediaViewer */,
+				08BB35BE2E8494FF00BDF671 /* SwiftMediaViewer */,
 			);
 			productName = SwiftDdit;
 			productReference = 08846F642DFF0E1B009F6F77 /* SwiftDdit.app */;
@@ -120,8 +117,7 @@
 			mainGroup = 08846F5B2DFF0E1B009F6F77;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				08D5DABC2E2841AC0027D139 /* XCRemoteSwiftPackageReference "CachedAsyncImage" */,
-				08B630F12E845D97004B53B8 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */,
+				08BB35BD2E8494FF00BDF671 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 08846F652DFF0E1B009F6F77 /* Products */;
@@ -407,17 +403,10 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		08B630F12E845D97004B53B8 /* XCLocalSwiftPackageReference "../Frameworks/SwiftMediaViewer" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Frameworks/SwiftMediaViewer;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
-		08D5DABC2E2841AC0027D139 /* XCRemoteSwiftPackageReference "CachedAsyncImage" */ = {
+		08BB35BD2E8494FF00BDF671 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SilverMarcs/CachedAsyncImage";
+			repositoryURL = "https://github.com/SilverMarcs/SwiftMediaViewer";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -426,18 +415,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		08B630F22E845D97004B53B8 /* SwiftMediaViewer */ = {
+		08BB35BE2E8494FF00BDF671 /* SwiftMediaViewer */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 08BB35BD2E8494FF00BDF671 /* XCRemoteSwiftPackageReference "SwiftMediaViewer" */;
 			productName = SwiftMediaViewer;
-		};
-		08D5D8592E283C910027D139 /* CachedAsyncImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CachedAsyncImage;
-		};
-		08D5DABD2E2841AC0027D139 /* CachedAsyncImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 08D5DABC2E2841AC0027D139 /* XCRemoteSwiftPackageReference "CachedAsyncImage" */;
-			productName = CachedAsyncImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

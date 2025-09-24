@@ -77,9 +77,11 @@ struct CommentView: View {
                 Label("Select text", systemImage: "selection.pin.in.out")
             }
         }
+        #if !os(macOS)
         .sheet(isPresented: $showTextSelection) {
             TextSelectionView(content: comment.body)
         }
+        #endif
         .sheet(isPresented: $showReplySheet) {
             ReplySheet(parentId: comment.id, isTopLevel: false) { text, parentId in
                 addOptimisticComment(text, parentId)
