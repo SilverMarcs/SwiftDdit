@@ -36,7 +36,6 @@ struct ImageModal: View {
             }
             
             HStack {
-
                 Button(action: previousImage) {
                     Image(systemName: "chevron.left")
                 }
@@ -68,9 +67,10 @@ struct ImageModal: View {
         .ignoresSafeArea()
         .tabViewStyle(.page)
         .navigationTransition(.zoom(sourceID: sourceID, in: imageNS ?? fallbackNS))
-        .toolbar {
-            SaveImageButton(imageURL: images[currentIndex].url)
-        }
+//        .overlay(alignment: .topTrailing) {
+//            SaveImageButton(imageURL: images[currentIndex].url)
+//                .padding()
+//        }
         #endif
     }
     

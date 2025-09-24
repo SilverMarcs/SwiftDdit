@@ -28,6 +28,7 @@ struct SaveImageButton: View {
       Image(systemName: isSaving ? "checkmark" : "arrow.down")
         .foregroundStyle(isSaving ? .green : .primary)
     }
+    .buttonStyle(.glass)
     .disabled(isSaving)
   }
 

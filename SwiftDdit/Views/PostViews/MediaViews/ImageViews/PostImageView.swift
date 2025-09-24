@@ -9,17 +9,17 @@ import SwiftUI
 import CachedAsyncImage
 
 struct PostImageView: View {
-    @Environment(\.appendToPath) var appendToPath
-
     var image: GalleryImage
     
     @Environment(\.imageNS) private var imageNS
     @Namespace private var fallbackNS
     
+    @State var imageModalData: ImageModalData? = nil
+    
     var body: some View {
         if let url = URL(string: image.url) {
             Button {
-                appendToPath(ImageModalData(image: image))
+                imageModalData = ImageModalData(image: image)
             } label: {
                 CachedAsyncImage(url: url, targetSize: CGSize(width: 500, height: 500))
                     .aspectRatio(image.aspectRatio, contentMode: .fit)
@@ -28,6 +28,9 @@ struct PostImageView: View {
                     .clipped()
             }
             .buttonStyle(.plain)
+            .fullScreenCover(item: $imageModalData) { data in
+                ImageModal(imageData: data)
+            }
         }
     }
 }

@@ -10,7 +10,6 @@ import CachedAsyncImage
 
 struct PostGalleryView: View {
     @Environment(\.imageNS) private var imageNS
-    @Environment(\.appendToPath) var appendToPath
     @Namespace private var fallbackNS
     
     let images: [GalleryImage]
@@ -20,12 +19,14 @@ struct PostGalleryView: View {
         GridItem(.adaptive(minimum: 80, maximum: 80), spacing: 4)
     ]
     
+    @State var imageModalData: ImageModalData? = nil
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Main image display (always first image)
             if let firstImage = images.first, let url = URL(string: firstImage.url) {
                 Button {
-                    appendToPath(ImageModalData(images: images, startIndex: 0))
+                    imageModalData = ImageModalData(images: images, startIndex: 0)
                 } label: {
                     CachedAsyncImage(url: url, targetSize: CGSize(width: 500, height: 500))
                         .aspectRatio(contentMode: .fit)
@@ -45,7 +46,7 @@ struct PostGalleryView: View {
                 HStack(spacing: 8) {
                     ForEach(Array(displayImages.enumerated()), id: \.offset) { index, image in
                         Button {
-                            appendToPath(ImageModalData(images: images, startIndex: index + 1))
+                            imageModalData = ImageModalData(images: images, startIndex: index + 1)
                         } label: {
                             if let url = URL(string: image.url) {
                                 CachedAsyncImage(url: url, targetSize: CGSize(width: 500, height: 500))
@@ -74,6 +75,9 @@ struct PostGalleryView: View {
                     }
                 }
             }
+        }
+        .fullScreenCover(item: $imageModalData) { data in
+            ImageModal(imageData: data)
         }
     }
 }

@@ -21,7 +21,8 @@ struct GalleryImage: Hashable, Identifiable {
     }
 }
 
-struct ImageModalData: Hashable {
+struct ImageModalData: Hashable, Identifiable {
+    var id = UUID()
     let images: [GalleryImage]
     let startIndex: Int
     
