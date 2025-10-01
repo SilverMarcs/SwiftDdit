@@ -53,7 +53,8 @@ extension Post {
             
             let dimensions = (videoPreview.width != nil && videoPreview.height != nil) ? 
                 CGSize(width: videoPreview.width!, height: videoPreview.height!) : nil
-            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions)
+            let (thumbnailURL, _) = extractHighQualityImageWithDimensions(from: data)
+            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions, thumbnailURL: thumbnailURL)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)
@@ -66,7 +67,8 @@ extension Post {
             
             let dimensions = (redditVideo.width != nil && redditVideo.height != nil) ? 
                 CGSize(width: redditVideo.width!, height: redditVideo.height!) : nil
-            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions)
+            let (thumbnailURL, _) = extractHighQualityImageWithDimensions(from: data)
+            let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions, thumbnailURL: thumbnailURL)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)
@@ -116,7 +118,7 @@ extension Post {
         // PRIORITY 4: Direct video files
         let videoFormats = [".mov", ".mp4", ".avi", ".mkv", ".flv", ".wmv", ".mpg", ".mpeg", ".webm"]
         if videoFormats.contains(where: { url.hasSuffix($0) }) {
-            let mediaType = MediaType.video(videoURL: url, dimensions: nil)
+            let mediaType = MediaType.video(videoURL: url, dimensions: nil, thumbnailURL: nil)
             
             // Prefetch video thumbnail immediately
             MediaURLExtractor.extractAndPrefetchURLs(from: mediaType)

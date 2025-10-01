@@ -1,5 +1,4 @@
 import SwiftUI
-import AVKit
 import SwiftMediaViewer
 
 struct PostVideoView: View {
@@ -8,11 +7,29 @@ struct PostVideoView: View {
     
     let videoURL: String
     let dimensions: CGSize?
-
+    let thumbnailURL: String?
+    
+    @State private var showVideo = false
+    
     var body: some View {
-        SMVVideo(videoURL: videoURL, autoplay: autoplay, muteOnPlay: muteOnPlay)
-            .aspectRatio(dimensions != nil ? (dimensions!.width / dimensions!.height) : 16/9, contentMode: .fit)
-            .cornerRadius(12)
-            .clipped()
+        Group {
+            if autoplay || showVideo {
+                SMVVideo(videoURL: videoURL, autoplay: true, muteOnPlay: muteOnPlay)
+            } else {
+                CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 450)
+                    .overlay(
+                        Image(systemName: "play.fill")
+                            .imageScale(.large)
+                            .padding()
+                            .glassEffect(in: .circle)
+                            .foregroundStyle(.white)
+                    )
+                    .onTapGesture {
+                        showVideo = true
+                    }
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .aspectRatio(dimensions != nil ? (dimensions!.width / dimensions!.height) : 16/9, contentMode: .fit)
     }
 }

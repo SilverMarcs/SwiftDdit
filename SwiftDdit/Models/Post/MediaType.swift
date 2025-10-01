@@ -37,7 +37,7 @@ indirect enum MediaType: Hashable {
     case none
     case image(galleryImage: GalleryImage)
     case gallery(galleryImages: [GalleryImage])
-    case video(videoURL: String, dimensions: CGSize?)
+    case video(videoURL: String, dimensions: CGSize?, thumbnailURL: String?)
     case youtube(videoID: String, galleryImage: GalleryImage)
     case link(metadata: LinkMetadata)
     case gif(galleryImage: GalleryImage)
@@ -56,8 +56,8 @@ indirect enum MediaType: Hashable {
             return galleryImage.url
         case .gallery(let images):
             return images.first?.url
-        case .video(let videoURL, _):
-            return videoURL
+        case .video(_, _, let thumbnailURL):
+            return thumbnailURL
         case .youtube(_, let galleryImage):
             return galleryImage.url
         case .gif(let galleryImage):
