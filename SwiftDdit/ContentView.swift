@@ -29,9 +29,9 @@ struct ContentView: View {
             }
         }
         .tabViewStyle(.sidebarAdaptable)
-        #if !os(macOS)
-        .tabBarMinimizeBehavior(.onScrollDown)
-        #endif
+//        #if !os(macOS)
+//        .tabBarMinimizeBehavior(.onScrollDown)
+//        #endif
         .overlay {
             if CredentialsManager.shared.activeCredentialId == nil {
                 ContentUnavailableView(
