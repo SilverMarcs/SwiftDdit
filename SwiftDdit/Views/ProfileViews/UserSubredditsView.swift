@@ -19,20 +19,20 @@ struct UserSubredditsView: View {
         List {
             UserLinks()
             
-            if isLoading {
-                LoadingIndicator()
-                    .id(UUID())
-            } else {
-                ForEach(sortedSectionKeys, id: \.self) { letter in
-                    Section(letter) {
-                        if let subredditsInSection = groupedSubreddits[letter] {
-                            ForEach(subredditsInSection.sorted { $0.displayName < $1.displayName }, id: \.id) { subreddit in
-                                SubredditRowView(subreddit: subreddit)
-                            }
+            ForEach(sortedSectionKeys, id: \.self) { letter in
+                Section(letter) {
+                    if let subredditsInSection = groupedSubreddits[letter] {
+                        ForEach(subredditsInSection.sorted { $0.displayName < $1.displayName }, id: \.id) { subreddit in
+                            SubredditRowView(subreddit: subreddit)
                         }
                     }
-                    .sectionIndexLabel(letter)
                 }
+                .sectionIndexLabel(letter)
+            }
+        }
+        .overlay {
+            if isLoading {
+                LoadingIndicator()
             }
         }
         .contentMargins(.top, 5)
@@ -47,7 +47,7 @@ struct UserSubredditsView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .sheet(isPresented: $showSettings) {
             SettingsView()
-//                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
+                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
         }
         #if !os(macOS)
         .toolbar {

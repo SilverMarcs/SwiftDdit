@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import SwiftMediaViewer
 
 struct HomeTab: View {
     @State var path: NavigationPath = NavigationPath()
+    @State private var smvPresenter = SMVImagePresenter()
     
     var body: some View {
         NavigationStack(path: $path) {
             PostsList(feedType: .home)
-                .navigationDestinations(path: $path)
+                .navigationDestinations(path: $path, smvPresenter: smvPresenter)
         }
     }
 }
