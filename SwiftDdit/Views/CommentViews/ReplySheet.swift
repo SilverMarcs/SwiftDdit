@@ -26,7 +26,7 @@ struct ReplySheet: View {
             .contentMargins(.top, 10)
             .navigationTitle("Reply to \(isTopLevel ? "post" : "comment")")
             .toolbarTitleDisplayMode(.inline)
-            .onAppear {
+            .task {
                 isTextFieldFocused = true
             }
             .toolbar {

@@ -38,7 +38,9 @@ struct UserSubredditsView: View {
         .contentMargins(.top, 5)
         .task {
             guard subreddits.isEmpty else { return }
+            isLoading = true
             await fetchSubreddits()
+            isLoading = false
         }
         .refreshable {
             await fetchSubreddits()
@@ -76,9 +78,6 @@ struct UserSubredditsView: View {
     }
     
     private func fetchSubreddits() async {
-        isLoading = true
-        defer { isLoading = false }
-        
         if let fetchedSubreddits = await RedditAPI.fetchUserSubreddits() {
             subreddits = fetchedSubreddits.filter { $0.isSubscribed }
         }
