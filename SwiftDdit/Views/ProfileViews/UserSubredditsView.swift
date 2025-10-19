@@ -49,7 +49,7 @@ struct UserSubredditsView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .sheet(isPresented: $showSettings) {
             SettingsView()
-                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
+//                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
         }
         #if !os(macOS)
         .toolbar {
@@ -60,7 +60,7 @@ struct UserSubredditsView: View {
                     Image(systemName: "gear")
                 }
             }
-            .matchedTransitionSource(id: "settings-button", in: transition)
+//            .matchedTransitionSource(id: "settings-button", in: transition)
         }
         #endif
     }

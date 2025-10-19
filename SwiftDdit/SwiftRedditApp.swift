@@ -26,10 +26,9 @@ struct SwiftDditApp: App {
         #endif
     }
     
+    #if !os(macOS)
     init() {
-        #if !os(macOS)
         try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
-        try? AVAudioSession.sharedInstance().setActive(true)
-        #endif
     }
+    #endif
 }
