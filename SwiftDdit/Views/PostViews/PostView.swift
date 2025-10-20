@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PostView: View {
-    @Environment(\.appendToPath) var appendToPath
     let post: Post
     var isCompact: Bool = true
     var addOptimisticTopLevelComment: ((String, String) -> Void)? = nil
@@ -72,99 +71,96 @@ struct PostView: View {
                           Image(systemName: "bubble.left")
                           
                             Text(post.formattedNumComments)
-                        }
-                      
-                        HStack(spacing: 4) {
-                            Image(systemName: "clock")
+                         }
+                       
+                         HStack(spacing: 4) {
+                             Image(systemName: "clock")
 
-                            Text(post.timeAgo)
-                        }
-                  }
-                  .font(.caption)
-                  .fontWeight(.semibold)
-                  .foregroundStyle(.secondary)
-              }
-              
-              Spacer()
-              
-              GlassEffectContainer {
-                  if !isCompact {
-                      Button {
-                          showCommentSheet = true
-                      } label: {
-                          Image(systemName: "arrowshape.turn.up.backward.fill")
-                              .font(.headline)
-                              .foregroundStyle(.accent)
-                              .padding(3.5)
-                      }
-                      .matchedTransitionSource(id: "reply-button", in: transition)
-                      .buttonStyle(.glass)
-                      .buttonBorderShape(.circle)
-                  } else {
-                      toggleSaveButton
-                          .font(.headline)
-                          .labelStyle(.iconOnly)
-                          .buttonStyle(.glass)
-                          .controlSize(.regular)
-                          .buttonBorderShape(.circle)
-                  }
-                  
-                  PostActionsView(post: post)
-              }
-            }
-        }
-        .padding(.horizontal, isCompact ? 12 : 0)
-        .padding(.vertical, isCompact ? 12 : 0)
-        .background(isCompact ? AnyShapeStyle(.background.secondary) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 16))
-        .contextMenu {
-            Section {
-              Button {
-                  appendToPath(PostFeedType.user(post.author))
-              } label: {
-                  Label {
-                      Text(post.author)
-                  } icon: {
-                      Image(systemName: "person")
-                  }
-              }
-            }
-            
-            if !isCompact {
-                Button {
-                    showTextSelection.toggle()
-                } label: {
-                    Label("Select text", systemImage: "selection.pin.in.out")
-                }
-            }
-            
-            toggleSaveButton
+                             Text(post.timeAgo)
+                         }
+                   }
+                   .font(.caption)
+                   .fontWeight(.semibold)
+                   .foregroundStyle(.secondary)
+               }
+               
+               Spacer()
+               
+               GlassEffectContainer {
+                   if !isCompact {
+                       Button {
+                           showCommentSheet = true
+                       } label: {
+                           Image(systemName: "arrowshape.turn.up.backward.fill")
+                               .font(.headline)
+                               .foregroundStyle(.accent)
+                               .padding(3.5)
+                       }
+                       .matchedTransitionSource(id: "reply-button", in: transition)
+                       .buttonStyle(.glass)
+                       .buttonBorderShape(.circle)
+                   } else {
+                       toggleSaveButton
+                           .font(.headline)
+                           .labelStyle(.iconOnly)
+                           .buttonStyle(.glass)
+                           .controlSize(.regular)
+                           .buttonBorderShape(.circle)
+                   }
+                   
+                   PostActionsView(post: post)
+               }
+             }
+         }
+         .padding(.horizontal, isCompact ? 12 : 0)
+         .padding(.vertical, isCompact ? 12 : 0)
+         .background(isCompact ? AnyShapeStyle(.background.secondary) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 16))
+         .contextMenu {
+             Section {
+               NavigationLink(value: PostFeedType.user(post.author)) {
+                   Label {
+                       Text(post.author)
+                   } icon: {
+                       Image(systemName: "person")
+                   }
+               }
+             }
+             
+             if !isCompact {
+                 Button {
+                     showTextSelection.toggle()
+                 } label: {
+                     Label("Select text", systemImage: "selection.pin.in.out")
+                 }
+             }
+             
+             toggleSaveButton
 
-            if let redditURL = post.redditURL {
-              ShareLink(item: redditURL) {
-                  Label("Share", systemImage: "square.and.arrow.up")
-              }
-            }
-        } preview: {
-            CompactPostView(post: post)
-                .padding(15)
-                .frame(maxWidth: 400)
-        }
-        #if !os(macOS)
-        .sheet(isPresented: $showTextSelection) {
-            TextSelectionView(content: post.selftext)
-        }
-        #endif
-        .sheet(isPresented: $showCommentSheet) {
-            if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {
-                ReplySheet(parentId: post.id, isTopLevel: true) { text, postId in
-                    addOptimisticTopLevelComment(text, postId)
-                }
-                #if !os(macOS)
-                .navigationTransition(.zoom(sourceID: "reply-button", in: transition))
-                #endif
-//                .presentationDetents([.fraction(0.7)])
-            }
-        }
+             if let redditURL = post.redditURL {
+               ShareLink(item: redditURL) {
+                   Label("Share", systemImage: "square.and.arrow.up")
+               }
+             }
+         } preview: {
+             CompactPostView(post: post)
+                 .padding(15)
+                 .frame(maxWidth: 400)
+         }
+         #if !os(macOS)
+         .sheet(isPresented: $showTextSelection) {
+             TextSelectionView(content: post.selftext)
+         }
+         #endif
+         .sheet(isPresented: $showCommentSheet) {
+             if let addOptimisticTopLevelComment = addOptimisticTopLevelComment {
+                 ReplySheet(parentId: post.id, isTopLevel: true) { text, postId in
+                     addOptimisticTopLevelComment(text, postId)
+                 }
+                 #if !os(macOS)
+                 .navigationTransition(.zoom(sourceID: "reply-button", in: transition))
+                 #endif
+             }
+         }
     }
     
     func toggleSave() async {

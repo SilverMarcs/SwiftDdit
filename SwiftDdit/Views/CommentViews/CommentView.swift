@@ -65,7 +65,17 @@ struct CommentView: View {
         }
         .buttonStyle(.plain)
         .contextMenu {
-            Button {
+            Section {
+                NavigationLink(value: PostFeedType.user(comment.author)) {
+                    Label {
+                        Text(comment.author)
+                    } icon: {
+                        Image(systemName: "person")
+                    }
+                }
+            }
+            
+            Button {                
                 showReplySheet = true
             } label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left")

@@ -9,18 +9,16 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct CompactPostView: View {
-    @Environment(\.appendToPath) var appendToPath
     let post: Post
     var isPreview: Bool = false
     
     var body: some View {
-        Button {
-            appendToPath(post)
-        } label: {
+        NavigationLink(value: post) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 5) {
                         SubredditButton(subreddit: post.subreddit, type: .text)
+                            .navigationLinkIndicatorVisibility(.hidden)
                             .font(.subheadline)
                         
                         Text("•")
@@ -67,3 +65,4 @@ struct CompactPostView: View {
         .buttonStyle(.plain)
     }
 }
+

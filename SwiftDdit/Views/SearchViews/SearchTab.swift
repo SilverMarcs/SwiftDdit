@@ -14,7 +14,7 @@ struct SearchTab: View {
     var body: some View {
         NavigationStack(path: $path) {
             SearchView()
-                .navigationDestinations(path: $path)
+                .navigationDestinations()
         }
     }
 }

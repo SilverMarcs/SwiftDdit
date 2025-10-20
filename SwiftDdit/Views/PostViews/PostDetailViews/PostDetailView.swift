@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct PostDetailView: View {
-    @Environment(\.appendToPath) var appendToPath
-    
+struct PostDetailView: View {    
     @State private var dataSource: PostDetailDataSource
     
     init(post: Post) {

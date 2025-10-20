@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PostsList: View {
-    @Environment(\.appendToPath) var appendToPath
     @Environment(\.isSearching) var isSearching
     @State private var dataSource: PostListDataSource
     
@@ -22,16 +21,13 @@ struct PostsList: View {
     var body: some View {
         List {
             ForEach(dataSource.posts) { post in
-                Button {
-                    appendToPath(post)
-                } label: {
+                NavigationLink(value: post) {
                     PostView(post: post)
-                        .navigationLinkIndicatorVisibility(.hidden)
                         #if !os(macOS)
                         .contentShape(.contextMenuPreview, .rect(cornerRadius: 16))
                         #endif
                 }
-                .buttonStyle(.plain)
+                .navigationLinkIndicatorVisibility(.hidden)
                 .listRowInsets(.vertical, 5)
                 .listRowInsets(.horizontal, 6)
             }
@@ -59,7 +55,7 @@ struct PostsList: View {
         #endif
         .listStyle(.plain)
         .navigationTitle(feedType.displayName)
-        .toolbarTitleDisplayMode(.inlineLarge)
+        .toolbarTitleDisplayMode(feedType == .saved ? .inline: .inlineLarge)
         .refreshable {
             await dataSource.refreshPosts()
         }

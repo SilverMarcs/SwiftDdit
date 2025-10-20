@@ -8,16 +8,32 @@
 import SwiftUI
 
 struct UserSubredditsView: View {
-    @Environment(\.appendToPath) var appendToPath
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
     @State private var showSettings = false
-    
-    @Namespace private var transition
 
     var body: some View {
         List {
-            UserLinks()
+//            UserLinks()
+            Section {
+                NavigationLink(value: InboxDestination()) {
+                    Label {
+                        Text("Inbox")
+                    } icon: {
+                        Image(systemName: "tray.circle.fill")
+                            .foregroundStyle(.blue)
+                    }
+                }
+                
+                NavigationLink(value: PostFeedType.saved) {
+                    Label {
+                        Text("Saved")
+                    } icon: {
+                        Image(systemName: "bookmark.circle.fill")
+                            .foregroundStyle(.green)
+                    }
+                }
+            }
             
             ForEach(sortedSectionKeys, id: \.self) { letter in
                 Section(letter) {
@@ -49,7 +65,6 @@ struct UserSubredditsView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .sheet(isPresented: $showSettings) {
             SettingsView()
-//                .navigationTransition(.zoom(sourceID: "settings-button", in: transition))
         }
         #if !os(macOS)
         .toolbar {
@@ -60,19 +75,16 @@ struct UserSubredditsView: View {
                     Image(systemName: "gear")
                 }
             }
-//            .matchedTransitionSource(id: "settings-button", in: transition)
         }
         #endif
     }
     
-    // Group subreddits alphabetically
     private var groupedSubreddits: [String: [Subreddit]] {
         Dictionary(grouping: subreddits) { subreddit in
             String(subreddit.displayName.prefix(1).uppercased())
         }
     }
     
-    // Get sorted section keys
     private var sortedSectionKeys: [String] {
         groupedSubreddits.keys.sorted()
     }

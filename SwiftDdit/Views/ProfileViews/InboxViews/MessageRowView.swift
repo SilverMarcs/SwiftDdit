@@ -8,17 +8,10 @@
 import SwiftUI
 
 struct MessageRowView: View {
-    @Environment(\.appendToPath) var appendToPath
     let message: Message
     
     var body: some View {
-        Button {
-            if let postNavigation = message.postNavigation {
-                appendToPath(postNavigation)
-            } else {
-                appendToPath(message)
-            }
-        } label: {
+        NavigationLink(value: message.postNavigation) {
             HStack(alignment: .top) {
                 Image(systemName: message.iconConfig.symbol)
                     .font(.title)
@@ -53,7 +46,9 @@ struct MessageRowView: View {
                                 .foregroundStyle(.secondary)
                         }
                         
-                        Spacer()
+                        Text("•")
+//                            .font(.caption)
+                            .foregroundStyle(.secondary)
                         
                         if let timeAgo = message.timeAgo {
                             Text(timeAgo)
@@ -65,6 +60,5 @@ struct MessageRowView: View {
             }
             .contentShape(.rect)
         }
-        .buttonStyle(.plain)
     }
 }

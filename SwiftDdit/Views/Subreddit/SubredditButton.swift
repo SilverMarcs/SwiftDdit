@@ -9,14 +9,11 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct SubredditButton: View {
-    @Environment(\.appendToPath) var appendToPath
     let subreddit: Subreddit
     let type: SubRedditButtonType
     
     var body: some View {
-        Button {
-            appendToPath(PostFeedType.subreddit(subreddit))
-        } label: {
+        NavigationLink(value: PostFeedType.subreddit(subreddit)) {
             switch type {
             case .text:
                 Text(subreddit.displayNamePrefixed)
@@ -37,7 +34,6 @@ struct SubredditButton: View {
                 }
             }
         }
-        .buttonStyle(.plain)
     }
 }
 

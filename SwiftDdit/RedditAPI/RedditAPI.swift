@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RedditAPI {
+enum RedditAPI {
     static let redditApiURLBase = "https://oauth.reddit.com"
     static let redditWWWApiURLBase = "https://www.reddit.com"
     

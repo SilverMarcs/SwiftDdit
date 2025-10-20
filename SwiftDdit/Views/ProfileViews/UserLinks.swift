@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserLinks: View {
-    @Environment(\.appendToPath) var appendToPath
+//    @Environment(\.appendToPath) var appendToPath
     
     var body: some View {
         Section {
@@ -16,9 +16,10 @@ struct UserLinks: View {
                 LinkButton(
                     icon: "tray.circle.fill",
                     title: "Inbox",
-                    iconColor: .blue
+                    iconColor: .blue,
+                    
                 ) {
-                    appendToPath(InboxDestination())
+//                    appendToPath(InboxDestination())
                 }
                 
                 LinkButton(
@@ -26,7 +27,7 @@ struct UserLinks: View {
                     title: "Saved",
                     iconColor: .green
                 ) {
-                    appendToPath(PostFeedType.saved)
+//                    appendToPath(PostFeedType.saved)
                 }
             }
             .listRowBackground(Color.clear)

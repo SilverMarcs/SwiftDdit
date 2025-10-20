@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct PostRepostView: View {
-    @Environment(\.appendToPath) var appendToPath
     let originalPost: Post
     
     var body: some View {
-        Button {
-            appendToPath(originalPost)
-        } label: {
+        NavigationLink(value: originalPost) {
             VStack(alignment: .leading) {
                 // Repost header
                 HStack {
@@ -66,10 +63,8 @@ struct PostRepostView: View {
             .padding(12)
             .background(.background.secondary, in: .rect(cornerRadius: 12))
         }
-        .buttonStyle(.plain)
     }
     
-    // Helper to prevent infinite nesting of reposts
     private func isRepostOfRepost(_ mediaType: MediaType) -> Bool {
         if case .repost = mediaType {
             return true

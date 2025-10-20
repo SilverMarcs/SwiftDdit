@@ -28,6 +28,7 @@ struct ContentView: View {
                 SearchTab()
             }
         }
+        .handleURLs()
         .tabViewStyle(.sidebarAdaptable)
 //        #if !os(macOS)
 //        .tabBarMinimizeBehavior(.onScrollDown)

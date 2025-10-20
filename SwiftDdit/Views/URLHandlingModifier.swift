@@ -9,14 +9,13 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct URLHandlingModifier: ViewModifier {
-    let path: Binding<NavigationPath>
+//    let path: Binding<NavigationPath>
 
     func body(content: Content) -> some View {
         content
             .environment(\.openURL, OpenURLAction { url in
                 let lower = url.absoluteString.lowercased()
 
-                // Let GIFs open with system
                 if lower.contains(".gif") {
                     return .systemAction(prefersInApp: true)
                 }
@@ -26,10 +25,10 @@ struct URLHandlingModifier: ViewModifier {
                      return .handled
                  }
                 
-                if let navPayload = parseRedditURL(url) {
-                    path.wrappedValue.append(navPayload)
-                    return .handled
-                }
+//                if let navPayload = parseRedditURL(url) {
+//                    path.wrappedValue.append(navPayload)
+//                    return .handled
+//                }
 
                 return .systemAction(prefersInApp: true)
             })
@@ -69,7 +68,7 @@ struct URLHandlingModifier: ViewModifier {
 }
 
 extension View {
-    func handleURLs(path: Binding<NavigationPath>) -> some View {
-        modifier(URLHandlingModifier(path: path))
+    func handleURLs() -> some View {
+        modifier(URLHandlingModifier())
     }
 }
