@@ -10,8 +10,7 @@ import SwiftMediaViewer
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var deleteAlertPresented = false
-    
+
     @AppStorage("autoplay") var autoplay: Bool = true
     @AppStorage("muteOnPlay") var muteOnPlay: Bool = false
     
@@ -33,36 +32,7 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section("Images") {
-                    Button {
-                        deleteAlertPresented = true
-                    } label: {
-                        HStack {
-                            Label {
-                                Text("Clear Image Cache")
-                                
-                            } icon: {
-                                Image(systemName: "trash")
-                            }
-                            
-//                            Spacer()
-//                            
-//                            Text("{Cache Size}")
-                        }
-                        .contentShape(.rect)
-                    }
-                    #if os(macOS)
-                    .buttonStyle(.plain)
-                    #endif
-                    .alert("Clear Image Cache", isPresented: $deleteAlertPresented) {
-                        Button("Clear", role: .destructive) {
-                            CachedAsyncImageConfiguration.clearAllCaches()
-                        }
-                        Button("Cancel", role: .cancel) { }
-                    } message: {
-                        Text("This will clear all cached images, freeing up storage space.")
-                    }
-                }
+                CacheManagerView()
             }
             .formStyle(.grouped)
             .navigationTitle("Settings")
@@ -70,11 +40,8 @@ struct SettingsView: View {
             #if !os(macOS)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(action: {
+                    Button(role: .close) {
                         dismiss()
-                    }) {
-                        Image(systemName: "xmark")
-                            
                     }
                 }
             }
