@@ -10,12 +10,11 @@ import SwiftMediaViewer
 
 struct SearchTab: View {
     @State var path: NavigationPath = NavigationPath()
-    @State private var smvPresenter = SMVImagePresenter()
     
     var body: some View {
         NavigationStack(path: $path) {
             SearchView()
-                .navigationDestinations(path: $path, smvPresenter: smvPresenter)
+                .navigationDestinations(path: $path)
         }
     }
 }

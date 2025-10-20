@@ -10,7 +10,6 @@ import SwiftMediaViewer
 
 struct URLHandlingModifier: ViewModifier {
     let path: Binding<NavigationPath>
-    let smvPresenter: SMVImagePresenter?
 
     func body(content: Content) -> some View {
         content
@@ -21,14 +20,12 @@ struct URLHandlingModifier: ViewModifier {
                 if lower.contains(".gif") {
                     return .systemAction(prefersInApp: true)
                 }
-                
-                if let smvPresenter {
-                    if let galleryImage = detectRedditImage(from: url) {
-                        smvPresenter.present(url: galleryImage.url, targetSize: 1200)
-                        return .handled
-                    }
-                }
 
+                if let url = detectRedditImage(from: url) {
+                     SMVImagePresenter.shared.present(url: url, targetSize: 1200)
+                     return .handled
+                 }
+                
                 if let navPayload = parseRedditURL(url) {
                     path.wrappedValue.append(navPayload)
                     return .handled
@@ -61,18 +58,18 @@ struct URLHandlingModifier: ViewModifier {
         return nil
     }
 
-    private func detectRedditImage(from url: URL) -> GalleryImage? {
+    private func detectRedditImage(from url: URL) -> URL? {
         let lower = url.absoluteString.lowercased()
         let hosts = ["preview.redd.it", "i.redd.it", "i.imgur.com"]
         let hostMatch = hosts.contains { url.host?.contains($0) == true }
         let extMatch = [".jpg", ".jpeg", ".png", ".webp"].contains { lower.hasSuffix($0) }
         guard hostMatch || extMatch else { return nil }
-        return GalleryImage(url: url.absoluteString, dimensions: nil)
+        return url
     }
 }
 
 extension View {
-    func handleURLs(path: Binding<NavigationPath>, smvPresenter: SMVImagePresenter) -> some View {
-        modifier(URLHandlingModifier(path: path, smvPresenter: smvPresenter))
+    func handleURLs(path: Binding<NavigationPath>) -> some View {
+        modifier(URLHandlingModifier(path: path))
     }
 }

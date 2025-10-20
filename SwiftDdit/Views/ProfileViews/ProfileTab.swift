@@ -10,12 +10,11 @@ import SwiftMediaViewer
 
 struct ProfileTab: View {
     @State var path: NavigationPath = NavigationPath()
-    @State private var smvPresenter = SMVImagePresenter()
     
     var body: some View {
         NavigationStack(path: $path) {
             UserSubredditsView()
-                .navigationDestinations(path: $path, smvPresenter: smvPresenter)
+                .navigationDestinations(path: $path)
         }
     }
 }

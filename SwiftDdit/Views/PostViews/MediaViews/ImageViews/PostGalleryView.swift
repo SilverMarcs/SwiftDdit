@@ -12,7 +12,7 @@ struct PostGalleryView: View {
     let images: [GalleryImage]
      
     var body: some View {
-        SMVImage(urls: images.map { $0.url }, targetSize: 600)
+        SMVImage(urlStrings: images.map { $0.url }, targetSize: 600)
             .aspectRatio(images.first?.aspectRatio, contentMode: .fit)
             .cornerRadius(12)
             .clipped()
