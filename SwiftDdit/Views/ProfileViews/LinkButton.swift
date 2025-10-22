@@ -31,7 +31,7 @@ struct LinkButton: View {
                 
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.secondary.opacity(0.6))
-                    .font(.system(size: 13.5, weight: .medium))
+                    .font(.system(size: 13.5, weight: .semibold))
             }
             .contentShape(.rect)
         }

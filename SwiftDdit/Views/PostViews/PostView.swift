@@ -149,6 +149,7 @@ struct PostView: View {
              CompactPostView(post: post)
                  .padding(15)
                  .frame(maxWidth: 400)
+                 .environment(navigationManager)
          }
          #if !os(macOS)
          .sheet(isPresented: $showTextSelection) {

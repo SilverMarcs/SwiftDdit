@@ -14,9 +14,7 @@ struct SubredditRowView: View {
     @Environment(NavigationPathManager.self) var navigationManager
 
     var body: some View {
-        Button {
-            navigationManager.path.append(PostFeedType.subreddit(subreddit))
-        } label: {
+        NavigationLink(value: PostFeedType.subreddit(subreddit)) {
             Label {
                 Text(subreddit.displayNamePrefixed)
                 if subreddit.subscriberCount > 0 {
@@ -28,13 +26,12 @@ struct SubredditRowView: View {
                         .foregroundStyle(subreddit.color ?? .secondary)
                         .clipShape(Circle())
                         .frame(width: 32, height: 32)
-
+                    
                 } else {
                     Image(systemName: "r.circle")
                         .foregroundStyle(subreddit.color ?? .secondary)
                 }
             }
         }
-        .buttonStyle(.plain)
     }
 }
