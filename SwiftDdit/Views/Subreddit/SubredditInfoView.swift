@@ -25,6 +25,7 @@ struct SubredditInfoView: View {
                 
                 HStack {
                     Text("Subscribed")
+                    Text(subreddit.displayName)
                     
                     Spacer()
                     
