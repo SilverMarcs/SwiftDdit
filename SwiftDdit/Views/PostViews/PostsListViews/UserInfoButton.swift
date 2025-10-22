@@ -17,7 +17,7 @@ struct UserInfoButton: ToolbarContent {
             Button {
                 showingUserInfo = true
             } label: {
-                Image(systemName: "person")
+                Image(systemName: "u.circle")
             }
             .sheet(isPresented: $showingUserInfo) {
                 UserInfoView(username: username)
@@ -27,7 +27,7 @@ struct UserInfoButton: ToolbarContent {
             }
         }
         #if !os(macOS)
-        .matchedTransitionSource(id: "user-info-\(username)", in: transition)
+            .matchedTransitionSource(id: "user-info-\(username)", in: transition)
         #endif
     }
 }
