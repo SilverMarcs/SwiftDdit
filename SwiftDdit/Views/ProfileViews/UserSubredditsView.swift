@@ -11,6 +11,7 @@ struct UserSubredditsView: View {
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
     @State private var showSettings = false
+    @State private var searchText = ""
 
     var body: some View {
         List {
@@ -32,7 +33,8 @@ struct UserSubredditsView: View {
                 LoadingIndicator()
             }
         }
-        .contentMargins(.top, 5)
+//        .contentMargins(.top, 0)
+        .searchable(text: $searchText, prompt: "Filter subreddits")
         .task {
             guard subreddits.isEmpty else { return }
             isLoading = true
@@ -61,7 +63,8 @@ struct UserSubredditsView: View {
     }
 
     private var groupedSubreddits: [String: [Subreddit]] {
-        Dictionary(grouping: subreddits) { subreddit in
+        let filtered = searchText.isEmpty ? subreddits : subreddits.filter { $0.displayName.localizedCaseInsensitiveContains(searchText) }
+        return Dictionary(grouping: filtered) { subreddit in
             String(subreddit.displayName.prefix(1).uppercased())
         }
     }
