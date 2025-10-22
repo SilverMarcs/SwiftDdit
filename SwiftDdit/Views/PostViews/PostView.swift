@@ -11,19 +11,21 @@ struct PostView: View {
     let post: Post
     var isCompact: Bool = true
     var addOptimisticTopLevelComment: ((String, String) -> Void)? = nil
-    
+
     @State private var isSaved: Bool
     @State private var showTextSelection: Bool = false
     @State private var showCommentSheet = false
     @Namespace private var transition
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     init(post: Post, isCompact: Bool = true, addOptimisticTopLevelComment: ((String, String) -> Void)? = nil) {
         self.post = post
         self.isCompact = isCompact
         self.addOptimisticTopLevelComment = addOptimisticTopLevelComment
         self._isSaved = State(initialValue: post.saved)
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(post.title)
@@ -31,7 +33,7 @@ struct PostView: View {
                 .fontWeight(.semibold)
                 .lineLimit(isCompact ? 3 : nil)
                 .multilineTextAlignment(.leading)
-            
+
             // Flair if available
             if let flair = post.linkFlairText, !flair.isEmpty {
                 Text(flair)
@@ -43,7 +45,7 @@ struct PostView: View {
                     .foregroundStyle(post.flairTextColor)
                     .cornerRadius(4)
             }
-          
+
           // ADD NSFW BADGE
 
             if !post.selftext.isEmpty {
@@ -53,26 +55,26 @@ struct PostView: View {
                     .opacity(isCompact ? 1 : 0.9)
                     .lineLimit(isCompact ? 3 : nil)
         }
-          
+
           if post.mediaType.hasMedia {
               PostMediaView(mediaType: post.mediaType)
           }
-          
+
           Divider()
-          
+
           HStack {
               SubredditButton(subreddit: post.subreddit, type: .icon(iconUrl: post.subreddit.iconURL ?? ""))
-              
+
               VStack(alignment: .leading, spacing: 3) {
                   SubredditButton(subreddit: post.subreddit, type: .text)
-                  
+
                   HStack(spacing: 10) {
                         HStack(spacing: 4) {
                           Image(systemName: "bubble.left")
-                          
+
                             Text(post.formattedNumComments)
                          }
-                       
+
                          HStack(spacing: 4) {
                              Image(systemName: "clock")
 
@@ -83,9 +85,9 @@ struct PostView: View {
                    .fontWeight(.semibold)
                    .foregroundStyle(.secondary)
                }
-               
+
                Spacer()
-               
+
                GlassEffectContainer {
                    if !isCompact {
                        Button {
@@ -107,7 +109,7 @@ struct PostView: View {
                            .controlSize(.regular)
                            .buttonBorderShape(.circle)
                    }
-                   
+
                    PostActionsView(post: post)
                }
              }
@@ -117,7 +119,9 @@ struct PostView: View {
          .background(isCompact ? AnyShapeStyle(.background.secondary) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 16))
          .contextMenu {
              Section {
-               NavigationLink(value: PostFeedType.user(post.author)) {
+               Button {
+                   navigationManager.path.append(PostFeedType.user(post.author))
+               } label: {
                    Label {
                        Text(post.author)
                    } icon: {
@@ -125,7 +129,7 @@ struct PostView: View {
                    }
                }
              }
-             
+
              if !isCompact {
                  Button {
                      showTextSelection.toggle()
@@ -133,7 +137,7 @@ struct PostView: View {
                      Label("Select text", systemImage: "selection.pin.in.out")
                  }
              }
-             
+
              toggleSaveButton
 
              if let redditURL = post.redditURL {
@@ -162,14 +166,14 @@ struct PostView: View {
              }
          }
     }
-    
+
     func toggleSave() async {
         let success = await RedditAPI.save(!isSaved, id: post.fullname)
         if success {
             isSaved.toggle()
         }
     }
-    
+
     var toggleSaveButton: some View {
         Button {
             Task {

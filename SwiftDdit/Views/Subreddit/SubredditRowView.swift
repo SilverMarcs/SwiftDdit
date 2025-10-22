@@ -10,9 +10,13 @@ import SwiftMediaViewer
 
 struct SubredditRowView: View {
     let subreddit: Subreddit
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
-        NavigationLink(value: PostFeedType.subreddit(subreddit)) {
+        Button {
+            navigationManager.path.append(PostFeedType.subreddit(subreddit))
+        } label: {
             Label {
                 Text(subreddit.displayNamePrefixed)
                 if subreddit.subscriberCount > 0 {
@@ -31,5 +35,6 @@ struct SubredditRowView: View {
                 }
             }
         }
+        .buttonStyle(.plain)
     }
 }

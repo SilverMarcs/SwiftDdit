@@ -9,12 +9,14 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct SearchTab: View {
-    @State var path: NavigationPath = NavigationPath()
-    
+    @State private var navigationManager = NavigationPathManager()
+
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $navigationManager.path) {
             SearchView()
                 .navigationDestinations()
         }
+        .environment(navigationManager)
+        .handleURLs(path: $navigationManager.path)
     }
 }

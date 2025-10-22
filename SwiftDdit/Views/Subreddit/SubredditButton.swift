@@ -11,9 +11,13 @@ import SwiftMediaViewer
 struct SubredditButton: View {
     let subreddit: Subreddit
     let type: SubRedditButtonType
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
-        NavigationLink(value: PostFeedType.subreddit(subreddit)) {
+        Button {
+            navigationManager.path.append(PostFeedType.subreddit(subreddit))
+        } label: {
             switch type {
             case .text:
                 Text(subreddit.displayNamePrefixed)
@@ -34,6 +38,7 @@ struct SubredditButton: View {
                 }
             }
         }
+        .buttonStyle(.plain)
     }
 }
 

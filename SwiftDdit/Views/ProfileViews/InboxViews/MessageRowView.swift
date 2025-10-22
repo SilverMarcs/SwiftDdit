@@ -9,15 +9,19 @@ import SwiftUI
 
 struct MessageRowView: View {
     let message: Message
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
-        NavigationLink(value: message.postNavigation) {
+        Button {
+            navigationManager.path.append(message.postNavigation)
+        } label: {
             HStack(alignment: .top) {
                 Image(systemName: message.iconConfig.symbol)
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundStyle(message.iconConfig.color)
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     // Message content
                     if let body = message.body, !body.isEmpty {
@@ -25,7 +29,7 @@ struct MessageRowView: View {
                             .lineLimit(2)
                             .font(.subheadline)
                     }
-                    
+
                     // Link title if it's a comment reply
                     if let linkTitle = message.linkTitle, !linkTitle.isEmpty {
                         Text("Re: \(linkTitle)")
@@ -34,7 +38,7 @@ struct MessageRowView: View {
                             .foregroundStyle(.secondary)
                             .italic()
                     }
-                    
+
                     HStack {
                         if let subreddit = message.subredditNamePrefixed {
                             Text(subreddit)
@@ -45,11 +49,11 @@ struct MessageRowView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Text("•")
 //                            .font(.caption)
                             .foregroundStyle(.secondary)
-                        
+
                         if let timeAgo = message.timeAgo {
                             Text(timeAgo)
                                 .font(.caption)
@@ -60,5 +64,6 @@ struct MessageRowView: View {
             }
             .contentShape(.rect)
         }
+        .buttonStyle(.plain)
     }
 }

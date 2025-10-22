@@ -9,22 +9,26 @@ import SwiftUI
 
 struct PostRepostView: View {
     let originalPost: Post
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
-        NavigationLink(value: originalPost) {
+        Button {
+            navigationManager.path.append(originalPost)
+        } label: {
             VStack(alignment: .leading) {
                 // Repost header
                 HStack {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .foregroundStyle(.secondary)
                         .font(.caption)
-                    
+
                     Text(originalPost.subreddit.displayNamePrefixed)
                         .foregroundStyle(.secondary)
                         .font(.caption)
-                    
+
                     Spacer()
-                    
+
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.up")
                             .font(.caption)
@@ -34,7 +38,7 @@ struct PostRepostView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                
+
                 // Original post content preview
                 VStack(alignment: .leading, spacing: 8) {
                     // Title
@@ -42,7 +46,7 @@ struct PostRepostView: View {
                         .font(.headline)
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
-                    
+
                     // Show original post's media if it has any (but smaller)
                     if originalPost.mediaType.hasMedia && !isRepostOfRepost(originalPost.mediaType) {
                         PostMediaView(mediaType: originalPost.mediaType)
@@ -50,7 +54,7 @@ struct PostRepostView: View {
                             .clipped()
                             .cornerRadius(8)
                     }
-                    
+
                     // Selftext preview for text posts
                     if originalPost.isSelf && !originalPost.selftext.isEmpty {
                         Text(originalPost.selftext.prefix(100))
@@ -63,8 +67,9 @@ struct PostRepostView: View {
             .padding(12)
             .background(.background.secondary, in: .rect(cornerRadius: 12))
         }
+        .buttonStyle(.plain)
     }
-    
+
     private func isRepostOfRepost(_ mediaType: MediaType) -> Bool {
         if case .repost = mediaType {
             return true

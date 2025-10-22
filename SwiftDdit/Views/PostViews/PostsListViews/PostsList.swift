@@ -9,30 +9,33 @@ import SwiftUI
 
 struct PostsList: View {
     @Environment(\.isSearching) var isSearching
+    @Environment(NavigationPathManager.self) var navigationManager
     @State private var dataSource: PostListDataSource
-    
+
     private let feedType: PostFeedType
-    
+
     init(feedType: PostFeedType) {
         self.feedType = feedType
         self._dataSource = State(initialValue: PostListDataSource(feedType: feedType))
     }
-    
+
     var body: some View {
         List {
             ForEach(dataSource.posts) { post in
-                NavigationLink(value: post) {
+                Button {
+                    navigationManager.path.append(post)
+                } label: {
                     PostView(post: post)
                         #if !os(macOS)
                         .contentShape(.contextMenuPreview, .rect(cornerRadius: 16))
                         #endif
                 }
-                .navigationLinkIndicatorVisibility(.hidden)
+                .buttonStyle(.plain)
                 .listRowInsets(.vertical, 5)
                 .listRowInsets(.horizontal, 6)
             }
             .listRowSeparator(.hidden)
-            
+
             Color.clear
                 .frame(height: 1)
                 .onAppear {
@@ -43,7 +46,7 @@ struct PostsList: View {
                     }
                 }
                 .listRowSeparator(.hidden)
-            
+
             if dataSource.isLoading {
                 LoadingIndicator()
                     .id(UUID())

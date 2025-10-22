@@ -14,27 +14,8 @@ struct UserSubredditsView: View {
 
     var body: some View {
         List {
-//            UserLinks()
-            Section {
-                NavigationLink(value: InboxDestination()) {
-                    Label {
-                        Text("Inbox")
-                    } icon: {
-                        Image(systemName: "tray.circle.fill")
-                            .foregroundStyle(.blue)
-                    }
-                }
-                
-                NavigationLink(value: PostFeedType.saved) {
-                    Label {
-                        Text("Saved")
-                    } icon: {
-                        Image(systemName: "bookmark.circle.fill")
-                            .foregroundStyle(.green)
-                    }
-                }
-            }
-            
+            UserLinks()
+
             ForEach(sortedSectionKeys, id: \.self) { letter in
                 Section(letter) {
                     if let subredditsInSection = groupedSubreddits[letter] {
@@ -78,17 +59,17 @@ struct UserSubredditsView: View {
         }
         #endif
     }
-    
+
     private var groupedSubreddits: [String: [Subreddit]] {
         Dictionary(grouping: subreddits) { subreddit in
             String(subreddit.displayName.prefix(1).uppercased())
         }
     }
-    
+
     private var sortedSectionKeys: [String] {
         groupedSubreddits.keys.sorted()
     }
-    
+
     private func fetchSubreddits() async {
         if let fetchedSubreddits = await RedditAPI.fetchUserSubreddits() {
             subreddits = fetchedSubreddits.filter { $0.isSubscribed }

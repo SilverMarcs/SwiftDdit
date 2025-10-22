@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct HomeTab: View {
-    @State var path: NavigationPath = NavigationPath()
-    
+    @State private var navigationManager = NavigationPathManager()
+
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $navigationManager.path) {
             PostsList(feedType: .home)
                 .navigationDestinations()
         }
+        .environment(navigationManager)
+        .handleURLs(path: $navigationManager.path)
     }
 }
 

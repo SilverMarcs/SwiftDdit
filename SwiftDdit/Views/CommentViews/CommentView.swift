@@ -11,13 +11,15 @@ struct CommentView: View {
     let comment: Comment
     let isCollapsed: Bool
     let onToggleCollapse: (String) -> Void
-    
+
     @Environment(\.addOptimisticComment) var addOptimisticComment
+    @Environment(NavigationPathManager.self) var navigationManager
+    
     @State private var showReplySheet = false
     @State private var showTextSelection = false
-    
+
     private let maxDepth = 8
-    
+
     var body: some View {
         Button {
             if comment.hasChildren {
@@ -38,17 +40,17 @@ struct CommentView: View {
                         .frame(width: 2)
                         .padding(.trailing, 9)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     CommentHeader(comment: comment)
-                    
+
                     if !isCollapsed {
                         Text(LocalizedStringKey(comment.body))
                             .font(.default)
                             .opacity(0.85)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    
+
                     if comment.hasChildren && isCollapsed {
                         Text("[\(comment.childCount) \(comment.childCount == 1 ? "reply" : "replies")]")
                             .font(.caption)
@@ -57,7 +59,7 @@ struct CommentView: View {
                     }
                 }
                 .contentShape(.rect)
-                
+
                 Spacer()
             }
             .id(comment.id)
@@ -66,7 +68,9 @@ struct CommentView: View {
         .buttonStyle(.plain)
         .contextMenu {
             Section {
-                NavigationLink(value: PostFeedType.user(comment.author)) {
+                Button {
+                    navigationManager.path.append(PostFeedType.user(comment.author))
+                } label: {
                     Label {
                         Text(comment.author)
                     } icon: {
@@ -74,13 +78,13 @@ struct CommentView: View {
                     }
                 }
             }
-            
-            Button {                
+
+            Button {
                 showReplySheet = true
             } label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left")
             }
-            
+
             Button {
                 showTextSelection.toggle()
             } label: {

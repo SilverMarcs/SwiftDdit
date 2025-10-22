@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct UserLinks: View {
-//    @Environment(\.appendToPath) var appendToPath
-    
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
         Section {
             HStack {
@@ -19,7 +19,7 @@ struct UserLinks: View {
                     iconColor: .blue,
                     
                 ) {
-//                    appendToPath(InboxDestination())
+                    navigationManager.path.append(InboxDestination())
                 }
                 
                 LinkButton(
@@ -27,7 +27,7 @@ struct UserLinks: View {
                     title: "Saved",
                     iconColor: .green
                 ) {
-//                    appendToPath(PostFeedType.saved)
+                    navigationManager.path.append(PostFeedType.saved)
                 }
             }
             .listRowBackground(Color.clear)

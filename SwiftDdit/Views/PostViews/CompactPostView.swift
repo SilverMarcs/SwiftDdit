@@ -11,37 +11,40 @@ import SwiftMediaViewer
 struct CompactPostView: View {
     let post: Post
     var isPreview: Bool = false
-    
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     var body: some View {
-        NavigationLink(value: post) {
+        Button {
+            navigationManager.path.append(post)
+        } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 5) {
                         SubredditButton(subreddit: post.subreddit, type: .text)
-                            .navigationLinkIndicatorVisibility(.hidden)
                             .font(.subheadline)
-                        
+
                         Text("•")
                             .foregroundStyle(.secondary)
-                        
+
                         Text(post.timeAgo)
                             .foregroundStyle(.secondary)
                             .font(.caption)
                     }
-                    
-                    
+
+
                     // Title
                     Text(post.title)
                         .font(.headline)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                    
+
                     HStack(spacing: 16) {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.up")
                             Text(post.formattedUps)
                         }
-                        
+
                         HStack(spacing: 4) {
                             Image(systemName: "bubble.left")
                             Text(post.formattedNumComments)
@@ -50,9 +53,9 @@ struct CompactPostView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 if let url = post.mediaType.firstMediaURL, let mediaURL = URL(string: url) {
                     CachedAsyncImage(url: mediaURL, targetSize: 500)
                         .frame(width: 70, height: 70)
@@ -65,4 +68,3 @@ struct CompactPostView: View {
         .buttonStyle(.plain)
     }
 }
-

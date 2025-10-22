@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct URLHandlingModifier: ViewModifier {
-//    let path: Binding<NavigationPath>
+    let path: Binding<NavigationPath>
 
     func body(content: Content) -> some View {
         content
@@ -24,11 +24,11 @@ struct URLHandlingModifier: ViewModifier {
                      SMVImagePresenter.shared.present(url: url, targetSize: 1200)
                      return .handled
                  }
-                
-//                if let navPayload = parseRedditURL(url) {
-//                    path.wrappedValue.append(navPayload)
-//                    return .handled
-//                }
+
+                if let navPayload = parseRedditURL(url) {
+                    path.wrappedValue.append(navPayload)
+                    return .handled
+                }
 
                 return .systemAction(prefersInApp: true)
             })
@@ -68,7 +68,7 @@ struct URLHandlingModifier: ViewModifier {
 }
 
 extension View {
-    func handleURLs() -> some View {
-        modifier(URLHandlingModifier())
+    func handleURLs(path: Binding<NavigationPath>) -> some View {
+        modifier(URLHandlingModifier(path: path))
     }
 }
