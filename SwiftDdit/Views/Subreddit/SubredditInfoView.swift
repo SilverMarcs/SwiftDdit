@@ -10,6 +10,8 @@ import SwiftUI
 struct SubredditInfoView: View {
     let subreddit: Subreddit
     @State private var isSubscribed: Bool
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     
     init(subreddit: Subreddit) {
         self.subreddit = subreddit
@@ -21,23 +23,26 @@ struct SubredditInfoView: View {
             LabeledContent("Subreddit", value: subreddit.displayNamePrefixed)
             
             Section("Statistics") {
-                LabeledContent("Subscribers", value: subreddit.formattedSubscriberCount)
+                if !subreddit.displayName.hasPrefix("u_") {
+                    LabeledContent("Subscribers", value: subreddit.formattedSubscriberCount)
+                }
                 
-                HStack {
-                    Text("Subscribed")
-                    Text(subreddit.displayName)
-                    
-                    Spacer()
-                    
-                    Button {
-                        Task {
-                            await toggleSubscribe()
+                LabeledContent {
+                    if isLoading {
+                        ProgressView()
+                    } else {
+                        Button {
+                            Task {
+                                await toggleSubscribe()
+                            }
+                        } label: {
+                            Text(isSubscribed ? "Unsubscribe" : "Subscribe")
+                                .foregroundStyle(isSubscribed ? .red : .blue)
                         }
-                    } label: {
-                        Text(isSubscribed ? "Unsubscribe" : "Subscribe")
-                            .foregroundStyle(isSubscribed ? .red : .blue)
+                        .buttonStyle(.borderless)
                     }
-                    .buttonStyle(.borderless)
+                } label: {
+                    Text("Subscription")
                 }
             }
             
@@ -45,21 +50,38 @@ struct SubredditInfoView: View {
                 Text(subreddit.publicDescription.isEmpty ? "No description available" : subreddit.publicDescription)
                     .font(.body)
             }
+            
+            if let errorMessage = errorMessage {
+                Section("Error") {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
+                }
+            }
         }
         .formStyle(.grouped)
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.medium])
     }
     
     func toggleSubscribe() async {
+        isLoading = true
+        errorMessage = nil
+        
         let success: Bool
+        let isUser = subreddit.displayName.hasPrefix("u_")
+        let name = isUser ? String(subreddit.displayName.dropFirst(2)) : subreddit.displayName
+        
         if isSubscribed {
-            success = await RedditAPI.unsubscribeFromSubreddit(subreddit.displayName)
+            success = isUser ? await RedditAPI.unfollowUser(name) : await RedditAPI.unsubscribeFromSubreddit(name)
         } else {
-            success = await RedditAPI.subscribeToSubreddit(subreddit.displayName)
+            success = isUser ? await RedditAPI.followUser(name) : await RedditAPI.subscribeToSubreddit(name)
         }
         
         if success {
             isSubscribed.toggle()
+        } else {
+            errorMessage = "Failed to \(isSubscribed ? "unsubscribe from" : "subscribe to") \(isUser ? "user" : "subreddit")"
         }
+        
+        isLoading = false
     }
 }

@@ -18,11 +18,7 @@ struct UserInfoView: View {
             LabeledContent("Username", value: "u/\(username)")
 
             Section("Actions") {
-                HStack {
-                    Text("Follow User")
-
-                    Spacer()
-
+                LabeledContent {
                     if isLoading {
                         ProgressView()
                     } else {
@@ -36,6 +32,8 @@ struct UserInfoView: View {
                         }
                         .buttonStyle(.borderless)
                     }
+                } label: {
+                    Text("Follow User")
                 }
             }
 

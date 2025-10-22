@@ -13,10 +13,13 @@ struct PostListToolbar: ToolbarContent {
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            if feedType.canSort {
+            if feedType.canSort,
+               let subreddit = feedType.subreddit,
+               !subreddit.displayName.hasPrefix("u_") {
                 SortMenuButton(selectedSort: $selectedSort)
             }
         }
+
 
         if let subreddit = feedType.subreddit  {
             SubredditInfoButton(subreddit: subreddit)
