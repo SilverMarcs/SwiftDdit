@@ -12,9 +12,11 @@ struct PostImageView: View {
     var image: GalleryImage
     
     var body: some View {
-        SMVImage(urlString: image.url, targetSize: 600)
-            .aspectRatio(image.aspectRatio, contentMode: .fit)
-            .cornerRadius(12)
-            .clipped()
+        if let url = image.urlObject {
+            SMVImage(url: url, targetSize: 1000)
+                .aspectRatio(image.aspectRatio, contentMode: .fit)
+                .cornerRadius(12)
+                .clipped()
+        }
     }
 }

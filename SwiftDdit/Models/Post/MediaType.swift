@@ -15,6 +15,10 @@ struct GalleryImage: Hashable, Identifiable {
         return url
     }
     
+    var urlObject: URL? {
+        URL(string: url)
+    }
+    
     var aspectRatio: CGFloat? {
         guard let dimensions = dimensions else { return nil }
         return dimensions.width / dimensions.height
