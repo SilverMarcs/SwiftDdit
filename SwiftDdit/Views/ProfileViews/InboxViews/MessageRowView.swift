@@ -14,7 +14,13 @@ struct MessageRowView: View {
 
     var body: some View {
         Button {
-            navigationManager.path.append(message.postNavigation)
+            if let nav = message.postNavigation {
+                // Navigate to the related post/comment
+                navigationManager.path.append(nav)
+            } else {
+                // Fallback: show message details when no post navigation is available
+                navigationManager.path.append(message)
+            }
         } label: {
             HStack(alignment: .top) {
                 Image(systemName: message.iconConfig.symbol)
