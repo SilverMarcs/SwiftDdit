@@ -13,9 +13,7 @@ struct SearchView: View {
     @State private var subredditResults: [Subreddit] = []
     @State private var postResults: [Post] = []
     @State private var isLoading = false
-    
-    @FocusState private var isFocused
-    
+        
     var searchResults: [Any] {
         switch searchScope {
         case .subreddits:
@@ -45,11 +43,6 @@ struct SearchView: View {
         .navigationTitle("Search")
         .toolbarTitleDisplayMode(.inlineLarge)
         .searchable(text: $searchText, prompt: "Search \(searchScope.rawValue)")
-        .searchFocused($isFocused)
-        .task {
-            try? await Task.sleep(nanoseconds: 1_000_000)
-            isFocused = true
-        }
         .searchScopes($searchScope, activation: .onSearchPresentation) {
             ForEach(SearchScope.allCases, id: \.self) { scope in
                 Text(scope.rawValue).tag(scope)
