@@ -47,7 +47,6 @@ struct PostView: View {
             }
 
           // ADD NSFW BADGE
-
             if !post.selftext.isEmpty {
                 Text(LocalizedStringKey(post.selftext))
                     .font(isCompact ? .callout : .default)
@@ -88,30 +87,28 @@ struct PostView: View {
 
                Spacer()
 
-               GlassEffectContainer {
-                   if !isCompact {
-                       Button {
-                           showCommentSheet = true
-                       } label: {
-                           Image(systemName: "arrowshape.turn.up.backward.fill")
-                               .font(.headline)
-                               .foregroundStyle(.accent)
-                               .padding(3.5)
-                       }
-                       .matchedTransitionSource(id: "reply-button", in: transition)
-                       .buttonStyle(.glass)
-                       .buttonBorderShape(.circle)
-                   } else {
-                       toggleSaveButton
+               if !isCompact {
+                   Button {
+                       showCommentSheet = true
+                   } label: {
+                       Image(systemName: "arrowshape.turn.up.backward.fill")
                            .font(.headline)
-                           .labelStyle(.iconOnly)
-                           .buttonStyle(.glass)
-                           .controlSize(.regular)
-                           .buttonBorderShape(.circle)
+                           .foregroundStyle(.accent)
+                           .padding(3.5)
                    }
-
-                   PostActionsView(post: post)
+                   .matchedTransitionSource(id: "reply-button", in: transition)
+                   .buttonStyle(.glass)
+                   .buttonBorderShape(.circle)
+               } else {
+                   toggleSaveButton
+                       .font(.headline)
+                       .labelStyle(.iconOnly)
+                       .buttonStyle(.glass)
+                       .controlSize(.regular)
+                       .buttonBorderShape(.circle)
                }
+               
+               PostActionsView(post: post)
              }
          }
          .padding(.horizontal, isCompact ? 12 : 0)
