@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct SearchTab: View {
-    @State private var navigationManager = NavigationPathManager()
+    @Bindable var navigationManager = NavigationPathManager()
 
     var body: some View {
         NavigationStack(path: $navigationManager.path) {
