@@ -38,6 +38,7 @@ struct PostsList: View {
 
             Color.clear
                 .frame(height: 1)
+                .listRowSeparator(.hidden)
                 .onAppear {
                     if !dataSource.isLoading && dataSource.after != nil && dataSource.searchText.isEmpty {
                         Task {
@@ -45,7 +46,6 @@ struct PostsList: View {
                         }
                     }
                 }
-                .listRowSeparator(.hidden)
 
             if dataSource.isLoading {
                 LoadingIndicator()
