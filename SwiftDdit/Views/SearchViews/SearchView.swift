@@ -40,11 +40,13 @@ struct SearchView: View {
                 }
             }
         }
+        .contentMargins(.top, 10)
         .navigationTitle("Search")
         .toolbarTitleDisplayMode(.inlineLarge)
         .searchable(text: $searchText, prompt: "Search \(searchScope.rawValue)")
-        .searchScopes($searchScope, activation: .onSearchPresentation) {
-            ForEach(SearchScope.allCases, id: \.self) { scope in
+        .searchPresentationToolbarBehavior(.avoidHidingContent)
+        .searchScopes($searchScope) {
+            ForEach(SearchScope.allCases) { scope in
                 Text(scope.rawValue).tag(scope)
             }
         }
@@ -105,7 +107,9 @@ struct SearchView: View {
     }
 }
 
-enum SearchScope: String, CaseIterable {
+enum SearchScope: String, CaseIterable, Identifiable {
     case subreddits = "Subreddits"
     case posts = "Posts"
+    
+    var id: String { rawValue }
 }
