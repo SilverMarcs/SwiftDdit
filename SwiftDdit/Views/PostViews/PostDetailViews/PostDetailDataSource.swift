@@ -80,15 +80,16 @@ import SwiftUI
                     post = fetchedPost
                 }
             }
-            
-            allComments = fetchedComments
-            updateVisibleComments()
-            
-            if let commentId = postNavigation.commentId {
-                Task {
-                    try? await Task.sleep(nanoseconds: 250_000_000)
-                    withAnimation {
-                        scrollPosition.scrollTo(id: commentId, anchor: .bottom)
+            withAnimation {
+                allComments = fetchedComments
+                updateVisibleComments()
+            } completion: {
+                if let commentId = self.postNavigation.commentId {
+                    Task {
+                        try? await Task.sleep(nanoseconds: 250_000_000)
+                        withAnimation {
+                            self.scrollPosition.scrollTo(id: commentId, anchor: .bottom)
+                        }
                     }
                 }
             }

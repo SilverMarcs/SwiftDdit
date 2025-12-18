@@ -5,9 +5,8 @@
 //  Created by Zabir Raihan on 12/07/2025.
 //
 
-import Foundation
+import SwiftUI
 
-/// Manages data loading for post lists
 @Observable class PostListDataSource {
     private(set) var posts: [Post] = []
     private(set) var isLoading = false
@@ -64,7 +63,9 @@ import Foundation
             let searchResults = await RedditAPI.searchPosts(searchText, subreddit: subredditName, limit: 20)
             guard let searchResults else { return }
             
-            posts.append(contentsOf: searchResults)
+            withAnimation {
+                posts.append(contentsOf: searchResults)
+            }
             // Search doesn't support pagination in the same way, so we reset after
             after = nil
         } else {
@@ -80,11 +81,15 @@ import Foundation
             
             guard let (newPosts, newAfter) = result else { return }
             if isRefresh {
-                posts = newPosts
+                withAnimation {
+                    posts = newPosts
+                }
             } else {
                 let existingIDs = Set(posts.map { $0.id })
                 let uniqueNewPosts = newPosts.filter { !existingIDs.contains($0.id) }
-                posts.append(contentsOf: uniqueNewPosts)
+                withAnimation {
+                    posts.append(contentsOf: uniqueNewPosts)
+                }
             }
             after = newAfter
         }

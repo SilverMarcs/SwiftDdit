@@ -55,7 +55,9 @@ struct InboxView: View {
         defer { isLoading = false }
         
         if let result = await RedditAPI.fetchInbox() {
-            messages = result.0 ?? []
+            withAnimation {
+                messages = result.0 ?? []
+            }
             after = result.1
         }
     }

@@ -35,8 +35,14 @@ struct UserSubredditsView: View {
                 LoadingIndicator()
             }
         }
-//        .contentMargins(.top, 0)
-        .searchable(text: $searchText, prompt: "Filter subreddits")
+        .searchable(text: Binding(
+            get: { searchText },
+            set: { newValue in
+                withAnimation {
+                    searchText = newValue
+                }
+            }
+        ), prompt: "Filter subreddits")
         .task {
             guard subreddits.isEmpty else { return }
             isLoading = true
@@ -81,7 +87,9 @@ struct UserSubredditsView: View {
 
     private func fetchSubreddits() async {
         if let fetchedSubreddits = await RedditAPI.fetchUserSubreddits() {
-            subreddits = fetchedSubreddits.filter { $0.isSubscribed }
+            withAnimation(.smooth) {
+                subreddits = fetchedSubreddits.filter { $0.isSubscribed }
+            }
         }
     }
 }
