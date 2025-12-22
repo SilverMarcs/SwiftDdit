@@ -10,7 +10,6 @@ import AVKit
 
 @main
 struct SwiftDditApp: App {
-    
     var body: some Scene {
         #if os(macOS)
         Window("SwiftDdit", id: "SwiftDdit") {
