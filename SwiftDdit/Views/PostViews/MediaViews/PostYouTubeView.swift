@@ -37,7 +37,7 @@ struct PostYouTubeView: View {
                 .task(id: loadKey) {
                     await loadPlayerHTML()
                 }
-                .aspectRatio(galleryImage.aspectRatio, contentMode: .fit)
+                .aspectRatio(galleryImage.aspectRatio ?? 16.0 / 9.0, contentMode: .fit)
                 .clipShape(.rect(cornerRadius: 12))
         } else {
             YouTubePlaceholderView(galleryImage: galleryImage) {

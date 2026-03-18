@@ -18,7 +18,7 @@ struct PostGIFView: View {
             url: galleryImage.urlObject ?? URL(string: galleryImage.url)!,
             autoplay: autoplay,
         )
-        .aspectRatio(galleryImage.aspectRatio, contentMode: .fit)
+        .aspectRatio(galleryImage.aspectRatio ?? 1, contentMode: .fit)
         .cornerRadius(12)
         .clipped()
     }

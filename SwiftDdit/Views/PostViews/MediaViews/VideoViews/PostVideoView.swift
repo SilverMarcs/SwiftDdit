@@ -11,6 +11,12 @@ struct PostVideoView: View {
     
     @State private var showVideo = false
     
+    private static func safeAspectRatio(from dimensions: CGSize?) -> CGFloat {
+        guard let d = dimensions, d.width > 0, d.height > 0 else { return 16.0 / 9.0 }
+        let ratio = d.width / d.height
+        return ratio.isFinite && ratio > 0 ? ratio : 16.0 / 9.0
+    }
+
     var body: some View {
         Group {
             if autoplay || showVideo {
@@ -30,6 +36,6 @@ struct PostVideoView: View {
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .aspectRatio(dimensions != nil ? (dimensions!.width / dimensions!.height) : 16/9, contentMode: .fit)
+        .aspectRatio(Self.safeAspectRatio(from: dimensions), contentMode: .fit)
     }
 }

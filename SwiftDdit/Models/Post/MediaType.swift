@@ -20,8 +20,12 @@ struct GalleryImage: Hashable, Identifiable {
     }
     
     var aspectRatio: CGFloat? {
-        guard let dimensions = dimensions else { return nil }
-        return dimensions.width / dimensions.height
+        guard let dimensions = dimensions,
+              dimensions.width > 0,
+              dimensions.height > 0 else { return nil }
+        let ratio = dimensions.width / dimensions.height
+        guard ratio.isFinite, ratio > 0 else { return nil }
+        return ratio
     }
 }
 
