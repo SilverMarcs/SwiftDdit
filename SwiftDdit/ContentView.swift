@@ -8,30 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
+    @State private var credentialsManager = CredentialsManager.shared
+    @State private var selectedTab: AppTab = .home
+    #if os(macOS)
+    @Environment(\.openSettings) private var openSettings
+    #endif
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "doc.text.image") {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "doc.text.image", value: .home) {
                 HomeTab()
             }
             
-            Tab("Profile", systemImage: "person.fill") {
+            Tab("Profile", systemImage: "person.fill", value: .profile) {
                 ProfileTab()
             }
-            
-            #if os(macOS)
-            Tab("Settings", systemImage: "gear") {
-                SettingsView()
-            }
-            #endif
-            
-            Tab(role: .search) {
+
+            Tab(value: .search, role: .search) {
                 SearchTab()
             }
         }
         .tabViewStyle(.sidebarAdaptable)
         .tabViewSearchActivation(.searchTabSelection)
         .overlay {
-            if CredentialsManager.shared.activeCredentialId == nil {
+            if credentialsManager.activeCredentialId == nil {
                 ContentUnavailableView(
                     "No Account Connected",
                     systemImage: "person.crop.circle.badge.exclamationmark",
@@ -39,9 +40,28 @@ struct ContentView: View {
                 )
             }
         }
+        .onOpenURL { url in
+            Task {
+                await handleRedirectURL(url)
+            }
+        }
+    }
+
+    @MainActor
+    private func handleRedirectURL(_ url: URL) async {
+        let result = await credentialsManager.handleRedirectURL(url)
+        guard result != .ignored else { return }
+
+        #if os(macOS)
+        openSettings()
+        #else
+        selectedTab = .profile
+        settingsNavigation.presentSettings(open: .accounts)
+        #endif
     }
 }
 
 #Preview {
     ContentView()
+        .environment(SettingsNavigationCoordinator())
 }

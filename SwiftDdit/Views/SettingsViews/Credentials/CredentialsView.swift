@@ -8,28 +8,13 @@
 import SwiftUI
 
 struct CredentialsView: View {
-    
-    
     @State private var credentialsManager = CredentialsManager.shared
     @State private var appID = KeychainManager.shared.loadAppID() ?? ""
-    @State private var isLoading = false
-    @State private var waitingForCallback = false
-    @State private var errorMessage = ""
-    @State private var showingError = false
     @State private var showingDeleteAlert = false
-    @State private var showingReplaceWarning = false
     @State private var credentialToDelete: RedditCredential?
-    
-    private var isFormValid: Bool {
-        !appID.trimmingCharacters(in: .whitespaces).isEmpty
-    }
     
     private var hasAnyCredentials: Bool {
         !credentialsManager.credentials.isEmpty
-    }
-    
-    private var needsAppCredentials: Bool {
-        !hasAnyCredentials
     }
     
     var body: some View {
@@ -48,7 +33,7 @@ struct CredentialsView: View {
                 }
             }
             
-//            if !hasAnyCredentials && needsAppCredentials {
+//            if !hasAnyCredentials {
                 Section("Step 1: Get Your App ID") {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("1. Go to Reddit's app preferences")
@@ -92,8 +77,8 @@ struct CredentialsView: View {
                 }
                 Section("Step 2: Enter Your App ID") {
                     TextField("Enter your Reddit app ID", text: $appID)
-                        .onChange(of: appID) {
-                            KeychainManager.shared.saveAppID(appID)
+                        .onChange(of: appID) { _, newValue in
+                            KeychainManager.shared.saveAppID(newValue)
                         }
                 }
             
@@ -106,23 +91,23 @@ struct CredentialsView: View {
         .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                if isLoading || waitingForCallback {
+                if credentialsManager.isAuthorizing || credentialsManager.isWaitingForCallback {
                     Button("Cancel") {
-                        cancelAuthorization()
+                        credentialsManager.cancelAuthorization()
                     }
                 } else {
-                    Button {
-                        authorizeCredential()
-                    } label: {
+                    Button(action: authorizeCredential) {
                         Image(systemName: "plus")
                     }
                 }
             }
         }
-        .alert("Error", isPresented: $showingError) {
-            Button("OK") { showingError = false }
+        .alert("Error", isPresented: authErrorBinding) {
+            Button("OK") {
+                credentialsManager.clearAuthError()
+            }
         } message: {
-            Text(errorMessage)
+            Text(credentialsManager.authErrorMessage ?? "Unknown error")
         }
         .alert("Delete Account", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) {
@@ -139,9 +124,6 @@ struct CredentialsView: View {
         } message: {
             Text("Are you sure you want to delete this account? This action cannot be undone.")
         }
-        .onOpenURL { url in
-            handleRedirectURL(url)
-        }
         .onAppear {
             // Pre-populate app credentials if we have existing accounts
             if let existingAppID = credentialsManager.existingAppCredentials {
@@ -151,77 +133,28 @@ struct CredentialsView: View {
             }
         }
     }
-    
-    private func cancelAuthorization() {
-        isLoading = false
-        waitingForCallback = false
+
+    private var authErrorBinding: Binding<Bool> {
+        Binding(
+            get: { credentialsManager.authErrorMessage != nil },
+            set: { isPresented in
+                if !isPresented {
+                    credentialsManager.clearAuthError()
+                }
+            }
+        )
     }
-    
-    private func resetForm() {
-        if !hasAnyCredentials {
-            appID = ""
-        }
-    }
-    
+
     private func authorizeCredential() {
-        let trimmedAppID: String
-        if let existingAppID = credentialsManager.existingAppCredentials {
-            trimmedAppID = existingAppID
-        } else {
-            trimmedAppID = appID.trimmingCharacters(in: .whitespaces)
-        }
-        guard !trimmedAppID.isEmpty else {
-            errorMessage = "Please enter your App ID"
-            showingError = true
+        guard let authURL = credentialsManager.prepareAuthorizationURL(appID: appID) else {
             return
         }
-        let authURL = credentialsManager.getAuthorizationCodeURL(trimmedAppID)
-        waitingForCallback = true
+
         #if os(macOS)
         NSWorkspace.shared.open(authURL)
         #else
         UIApplication.shared.open(authURL)
         #endif
-    }
-    
-    private func handleRedirectURL(_ url: URL) {
-        guard waitingForCallback else { return }
-        
-        if let authCode = credentialsManager.getAuthCodeFromURL(url) {
-            Task {
-                await processAuthCode(authCode)
-            }
-        } else {
-            waitingForCallback = false
-            errorMessage = "Authorization was cancelled or failed"
-            showingError = true
-        }
-    }
-    
-    private func processAuthCode(_ authCode: String) async {
-        isLoading = true
-        
-        let trimmedAppID: String
-        if let existingAppID = credentialsManager.existingAppCredentials {
-            trimmedAppID = existingAppID
-        } else {
-            trimmedAppID = appID.trimmingCharacters(in: .whitespaces)
-        }
-        let credential = RedditCredential(
-            apiAppID: trimmedAppID
-        )
-        let success = await credentialsManager.authorizeCredential(credential, authCode: authCode)
-        
-        isLoading = false
-        waitingForCallback = false
-        
-        if success {
-            // Reset form state
-            resetForm()
-        } else {
-            errorMessage = "Failed to exchange authorization code for access token. Please check your credentials and try again."
-            showingError = true
-        }
     }
 }
 

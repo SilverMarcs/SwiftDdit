@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct UserSubredditsView: View {
+    @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
-    @State private var showSettings = false
     @State private var searchText = ""
 
     @Namespace private var transition
@@ -54,24 +54,36 @@ struct UserSubredditsView: View {
         }
         .navigationTitle("Profile")
         .toolbarTitleDisplayMode(.inlineLarge)
-        .sheet(isPresented: $showSettings) {
-            SettingsView()
+        .sheet(item: settingsSheetBinding) { sheet in
+            switch sheet {
+            case .settings:
+                SettingsView()
                 #if !os(macOS)
-                .navigationTransition(.zoom(sourceID: "settings-gear", in: transition))
+                    .navigationTransition(.zoom(sourceID: "settings-gear", in: transition))
                 #endif
+            }
         }
         #if !os(macOS)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showSettings.toggle()
-                } label: {
+                Button(action: openSettings) {
                     Image(systemName: "gear")
                 }
             }
             .matchedTransitionSource(id: "settings-gear", in: transition)
         }
         #endif
+    }
+
+    private var settingsSheetBinding: Binding<SettingsNavigationCoordinator.SheetDestination?> {
+        Binding(
+            get: { settingsNavigation.presentedSheet },
+            set: { newValue in
+                if newValue == nil {
+                    settingsNavigation.dismissSettings()
+                }
+            }
+        )
     }
 
     private var groupedSubreddits: [String: [Subreddit]] {
@@ -91,5 +103,9 @@ struct UserSubredditsView: View {
                 subreddits = fetchedSubreddits.filter { $0.isSubscribed }
             }
         }
+    }
+
+    private func openSettings() {
+        settingsNavigation.presentSettings()
     }
 }

@@ -10,17 +10,25 @@ import AVKit
 
 @main
 struct SwiftDditApp: App {
+    @State private var settingsNavigation = SettingsNavigationCoordinator()
+
     var body: some Scene {
         #if os(macOS)
         Window("SwiftDdit", id: "SwiftDdit") {
             ContentView()
+                .environment(settingsNavigation)
                 .onAppear {
                    NSWindow.allowsAutomaticWindowTabbing = false
                }
         }
+        Settings {
+            SettingsView()
+                .environment(settingsNavigation)
+        }
         #else
         WindowGroup {
             ContentView()
+                .environment(settingsNavigation)
         }
         #endif
     }

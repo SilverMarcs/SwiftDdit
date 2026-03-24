@@ -10,15 +10,18 @@ import SwiftMediaViewer
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-
+    @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
+    
     @AppStorage("autoplay") var autoplay: Bool = true
     @AppStorage("muteOnPlay") var muteOnPlay: Bool = false
     
     var body: some View {
-        NavigationStack {
+        @Bindable var settingsNavigation = settingsNavigation
+
+        NavigationStack(path: $settingsNavigation.path) {
             Form {
                 Section("Reddit API") {
-                    NavigationLink(destination: CredentialsView()) {
+                    NavigationLink(value: SettingsNavigationCoordinator.Route.accounts) {
                         Label("Accounts", systemImage: "person.fill")
                     }
                 }
@@ -37,6 +40,12 @@ struct SettingsView: View {
             .formStyle(.grouped)
             .navigationTitle("Settings")
             .toolbarTitleDisplayMode(.inline)
+            .navigationDestination(for: SettingsNavigationCoordinator.Route.self) { route in
+                switch route {
+                case .accounts:
+                    CredentialsView()
+                }
+            }
             #if !os(macOS)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -52,4 +61,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environment(SettingsNavigationCoordinator())
 }

@@ -8,7 +8,9 @@
 import Foundation
 import SwiftUI
 
-@Observable class CredentialsManager {
+@MainActor
+@Observable
+final class CredentialsManager {
     @ObservationIgnored static let shared = CredentialsManager()
     
     @ObservationIgnored private let keychainManager = KeychainManager.shared
@@ -19,6 +21,9 @@ import SwiftUI
     // Multiple credentials support
     var credentials: [RedditCredential] = []
     var activeCredentialId: UUID? = nil
+    var isWaitingForCallback = false
+    var isAuthorizing = false
+    var authErrorMessage: String?
     
     // Computed property for backward compatibility
     var credential: RedditCredential? {
@@ -152,6 +157,31 @@ import SwiftUI
         
         return finalURL
     }
+
+    func prepareAuthorizationURL(appID: String) -> URL? {
+        let resolvedAppID = resolveAuthorizationAppID(from: appID)
+        guard !resolvedAppID.isEmpty else {
+            authErrorMessage = "Please enter your App ID"
+            return nil
+        }
+
+        keychainManager.saveAppID(resolvedAppID)
+        authErrorMessage = nil
+        isWaitingForCallback = true
+        isAuthorizing = false
+
+        return getAuthorizationCodeURL(resolvedAppID)
+    }
+
+    func cancelAuthorization() {
+        isWaitingForCallback = false
+        isAuthorizing = false
+        lastAuthState = nil
+    }
+
+    func clearAuthError() {
+        authErrorMessage = nil
+    }
     
     func getAuthCodeFromURL(_ rawUrl: URL) -> String? {
         
@@ -181,6 +211,45 @@ import SwiftUI
         }
         
         return code
+    }
+
+    func handleRedirectURL(_ url: URL) async -> RedirectResult {
+        guard let authCode = getAuthCodeFromURL(url) else {
+            guard isWaitingForCallback else {
+                return .ignored
+            }
+
+            isWaitingForCallback = false
+            lastAuthState = nil
+            authErrorMessage = "Authorization was cancelled or failed"
+            return .failed
+        }
+
+        let resolvedAppID = resolveAuthorizationAppID(from: keychainManager.loadAppID() ?? "")
+        guard !resolvedAppID.isEmpty else {
+            isWaitingForCallback = false
+            lastAuthState = nil
+            authErrorMessage = "Please enter your App ID"
+            return .failed
+        }
+
+        isWaitingForCallback = false
+        isAuthorizing = true
+        defer {
+            isAuthorizing = false
+            lastAuthState = nil
+        }
+
+        let credential = RedditCredential(apiAppID: resolvedAppID)
+        let success = await authorizeCredential(credential, authCode: authCode)
+
+        if success {
+            authErrorMessage = nil
+            return .success
+        }
+
+        authErrorMessage = "Failed to exchange authorization code for access token. Please check your credentials and try again."
+        return .failed
     }
     
     func authorizeCredential(_ credential: RedditCredential, authCode: String) async -> Bool {
@@ -244,5 +313,19 @@ import SwiftUI
         }
         
         return result.token?.token
+    }
+
+    private func resolveAuthorizationAppID(from appID: String) -> String {
+        if let existingAppID = existingAppCredentials {
+            return existingAppID
+        }
+
+        return appID.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    enum RedirectResult: Equatable {
+        case ignored
+        case success
+        case failed
     }
 }
