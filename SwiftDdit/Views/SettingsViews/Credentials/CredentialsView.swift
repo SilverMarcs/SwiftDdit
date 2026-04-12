@@ -9,14 +9,13 @@ import SwiftUI
 
 struct CredentialsView: View {
     @State private var credentialsManager = CredentialsManager.shared
-    @State private var appID = KeychainManager.shared.loadAppID() ?? ""
     @State private var showingDeleteAlert = false
     @State private var credentialToDelete: RedditCredential?
-    
+
     private var hasAnyCredentials: Bool {
         !credentialsManager.credentials.isEmpty
     }
-    
+
     var body: some View {
         List {
             if hasAnyCredentials {
@@ -32,76 +31,19 @@ struct CredentialsView: View {
                     }
                 }
             }
-            
-//            if !hasAnyCredentials {
-                Section("Step 1: Get Your App ID") {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("1. Go to Reddit's app preferences")
-                        Text("2. Create a new app (select 'installed app')")
-                        Text("3. Set the redirect URI to the following url:")
-                        
-                        HStack {
-                            Text("swiftddit://auth-success")
-                                .monospaced()
-                            Spacer()
-                            Button {
-                                #if os(macOS)
-                                NSPasteboard.general.clearContents()
-                                NSPasteboard.general.setString("swiftddit://auth-success", forType: .string)
-                                #else
-                                UIPasteboard.general.string = "swiftddit://auth-success"
-                                #endif
-                            } label: {
-                                Image(systemName: "doc.on.clipboard")
-                            }
-                            .controlSize(.small)
-                        }
-                        .padding(8)
-                        .background {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.background.tertiary)
-                        }
-                        
-                        Text("4. Paste the App ID below")
-                    }
-                    .focusEffectDisabled()
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    
-                    Link(destination: URL(string: "https://www.reddit.com/prefs/apps")!) {
-                        Label("Open Reddit App Settings", systemImage: "safari")
-                    }
-                    .environment(\.openURL, OpenURLAction { url in
-                        return .systemAction
-                    })
+
+            Section {
+                Button {
+                    credentialsManager.isShowingLoginWebView = true
+                } label: {
+                    Label("Add Account", systemImage: "plus.circle")
                 }
-                Section("Step 2: Enter Your App ID") {
-                    TextField("Enter your Reddit app ID", text: $appID)
-                        .onChange(of: appID) { _, newValue in
-                            KeychainManager.shared.saveAppID(newValue)
-                        }
-                }
-            
-                Section("Step 3: Add Account") {
-                    Text("Click Plus button on top right and complete the auth flow in reddit website")
-                }
-//            }
+            } footer: {
+                Text("Sign in with your Reddit account using the web login.")
+            }
         }
         .navigationTitle("Accounts")
         .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                if credentialsManager.isAuthorizing || credentialsManager.isWaitingForCallback {
-                    Button("Cancel") {
-                        credentialsManager.cancelAuthorization()
-                    }
-                } else {
-                    Button(action: authorizeCredential) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-        }
         .alert("Error", isPresented: authErrorBinding) {
             Button("OK") {
                 credentialsManager.clearAuthError()
@@ -124,12 +66,22 @@ struct CredentialsView: View {
         } message: {
             Text("Are you sure you want to delete this account? This action cannot be undone.")
         }
-        .onAppear {
-            // Pre-populate app credentials if we have existing accounts
-            if let existingAppID = credentialsManager.existingAppCredentials {
-                appID = existingAppID
-            } else {
-                appID = KeychainManager.shared.loadAppID() ?? ""
+        .sheet(isPresented: $credentialsManager.isShowingLoginWebView) {
+            NavigationStack {
+                LoginWebView { cookie in
+                    Task {
+                        await credentialsManager.handleLoginCookieReceived(cookie: cookie)
+                    }
+                }
+                .navigationTitle("Sign in to Reddit")
+                .toolbarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            credentialsManager.isShowingLoginWebView = false
+                        }
+                    }
+                }
             }
         }
     }
@@ -143,18 +95,6 @@ struct CredentialsView: View {
                 }
             }
         )
-    }
-
-    private func authorizeCredential() {
-        guard let authURL = credentialsManager.prepareAuthorizationURL(appID: appID) else {
-            return
-        }
-
-        #if os(macOS)
-        NSWorkspace.shared.open(authURL)
-        #else
-        UIApplication.shared.open(authURL)
-        #endif
     }
 }
 

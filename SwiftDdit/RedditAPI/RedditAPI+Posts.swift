@@ -18,7 +18,7 @@ extension RedditAPI {
     private static func buildPostsURL(for feedType: PostFeedType, sort: SubListingSortOption, after: String?, limit: Int) -> URL? {
         guard let endpoint = buildEndpoint(for: feedType, sort: sort) else { return nil }
         
-        var components = URLComponents(string: "\(Self.redditApiURLBase)\(endpoint)")
+        var components = URLComponents(string: "\(Self.baseURL)\(endpoint).json")
         components?.queryItems = [
             URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "raw_json", value: "1"),
@@ -77,14 +77,14 @@ extension RedditAPI {
     
     @discardableResult
     static func vote(_ action: VoteAction, id: String) async -> Bool {
-        guard let url = URL(string: "\(Self.redditApiURLBase)/api/vote") else { return false }
+        guard let url = URL(string: "\(Self.baseURL)/api/vote") else { return false }
         let parameters = "dir=\(action.rawValue)&id=\(id)&api_type=json&raw_json=1"
         return await performPostRequest(url: url, parameters: parameters)
     }
     
     static func save(_ save: Bool, id: String) async -> Bool {
         let endpoint = save ? "save" : "unsave"
-        guard let url = URL(string: "\(Self.redditApiURLBase)/api/\(endpoint)") else { return false }
+        guard let url = URL(string: "\(Self.baseURL)/api/\(endpoint)") else { return false }
         return await performPostRequest(url: url, parameters: "id=\(id)")
     }
 }

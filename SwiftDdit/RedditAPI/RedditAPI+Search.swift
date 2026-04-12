@@ -19,7 +19,7 @@ extension RedditAPI {
     ) async -> T? {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
 
-        var components = URLComponents(string: "\(Self.redditApiURLBase)/\(endpoint)")
+        var components = URLComponents(string: "\(Self.baseURL)/\(endpoint).json")
         components?.queryItems = queryItems
         
         guard let url = components?.url else { return nil }

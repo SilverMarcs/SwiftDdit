@@ -22,6 +22,7 @@ struct UserData: Codable {
     let icon_img: String?
     let snoovatar_img: String?
     let subreddit: UserSubreddit?
+    let modhash: String?
 }
 
 struct UserSubreddit: Codable {

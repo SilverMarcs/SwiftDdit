@@ -11,9 +11,6 @@ struct ContentView: View {
     @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
     @State private var credentialsManager = CredentialsManager.shared
     @State private var selectedTab: AppTab = .home
-    #if os(macOS)
-    @Environment(\.openSettings) private var openSettings
-    #endif
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -40,24 +37,6 @@ struct ContentView: View {
                 )
             }
         }
-        .onOpenURL { url in
-            Task {
-                await handleRedirectURL(url)
-            }
-        }
-    }
-
-    @MainActor
-    private func handleRedirectURL(_ url: URL) async {
-        let result = await credentialsManager.handleRedirectURL(url)
-        guard result != .ignored else { return }
-
-        #if os(macOS)
-        openSettings()
-        #else
-        selectedTab = .profile
-        settingsNavigation.presentSettings(open: .accounts)
-        #endif
     }
 }
 
