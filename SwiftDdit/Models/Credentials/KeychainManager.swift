@@ -5,9 +5,6 @@ final class KeychainManager {
     static let shared = KeychainManager()
     private let service = "com.mush.swifttube.SwiftTube"
     
-    private let appIDKey = "reddit_app_id"
-    private let appSecretKey = "reddit_app_secret"
-    
     private init() {}
     
     func save(key: String, data: String) {
@@ -55,20 +52,4 @@ final class KeychainManager {
         SecItemDelete(query as CFDictionary)
     }
     
-    // MARK: - App Credentials Persistence
-    func saveAppID(_ appID: String) {
-        save(key: appIDKey, data: appID)
-    }
-    
-    func saveAppSecret(_ appSecret: String) {
-        save(key: appSecretKey, data: appSecret)
-    }
-    
-    func loadAppID() -> String? {
-        load(key: appIDKey)
-    }
-    
-    func loadAppSecret() -> String? {
-        load(key: appSecretKey)
-    }
 }

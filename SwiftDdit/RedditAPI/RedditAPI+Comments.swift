@@ -61,7 +61,7 @@ extension RedditAPI {
         depth: Int
     ) -> URL? {
         let cleanPostID = postID.hasPrefix("t3_") ? String(postID.dropFirst(3)) : postID
-        var urlString = "\(Self.redditApiURLBase)/r/\(subreddit)/comments/\(cleanPostID)"
+        var urlString = "\(Self.baseURL)/r/\(subreddit)/comments/\(cleanPostID)"
         
         if let commentID = commentID {
             let cleanCommentID = commentID.hasPrefix("t1_") ? String(commentID.dropFirst(3)) : commentID
@@ -85,14 +85,14 @@ extension RedditAPI {
     
     @discardableResult
     static func voteComment(_ action: VoteAction, id: String) async -> Bool {
-        guard let url = URL(string: "\(Self.redditApiURLBase)/api/vote") else { return false }
+        guard let url = URL(string: "\(Self.baseURL)/api/vote") else { return false }
         let parameters = "dir=\(action.rawValue)&id=\(id)&api_type=json&raw_json=1"
         return await performPostRequest(url: url, parameters: parameters)
     }
     
     @discardableResult
     static func replyToComment(text: String, parentFullname: String) async -> Bool {
-        guard let url = URL(string: "\(Self.redditApiURLBase)/api/comment") else { return false }
+        guard let url = URL(string: "\(Self.baseURL)/api/comment") else { return false }
         let encodedText = text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let parameters = "api_type=json&text=\(encodedText)&thing_id=\(parentFullname)&raw_json=1"
         return await performPostRequest(url: url, parameters: parameters)
