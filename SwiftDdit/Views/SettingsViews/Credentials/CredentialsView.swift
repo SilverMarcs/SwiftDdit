@@ -34,7 +34,7 @@ struct CredentialsView: View {
 
             Section {
                 Button {
-                    credentialsManager.isShowingLoginWebView = true
+                    Task { await credentialsManager.prepareForNewLogin() }
                 } label: {
                     Label("Add Account", systemImage: "plus.circle")
                 }
@@ -78,7 +78,7 @@ struct CredentialsView: View {
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
-                            credentialsManager.isShowingLoginWebView = false
+                            credentialsManager.cancelLogin()
                         }
                     }
                 }

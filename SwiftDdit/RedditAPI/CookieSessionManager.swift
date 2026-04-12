@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WebKit
 
 final class CookieSessionManager {
     static let shared = CookieSessionManager()
@@ -25,11 +26,7 @@ final class CookieSessionManager {
     }
 
     func injectCookie(_ cookieValue: String) {
-        if let existingCookies = HTTPCookieStorage.shared.cookies(for: URL(string: "https://www.reddit.com")!) {
-            for cookie in existingCookies where cookie.name == "reddit_session" {
-                HTTPCookieStorage.shared.deleteCookie(cookie)
-            }
-        }
+        clearInjectedCookies()
         let properties: [HTTPCookiePropertyKey: Any] = [
             .domain: ".reddit.com", .path: "/", .name: "reddit_session",
             .value: cookieValue, .secure: "TRUE",
@@ -41,10 +38,25 @@ final class CookieSessionManager {
     }
 
     func clearInjectedCookies() {
-        if let cookies = HTTPCookieStorage.shared.cookies(for: URL(string: "https://www.reddit.com")!) {
-            for cookie in cookies where cookie.name == "reddit_session" {
-                HTTPCookieStorage.shared.deleteCookie(cookie)
-            }
+        guard let url = URL(string: "https://www.reddit.com"),
+              let cookies = HTTPCookieStorage.shared.cookies(for: url) else { return }
+        for cookie in cookies where cookie.name == "reddit_session" {
+            HTTPCookieStorage.shared.deleteCookie(cookie)
+        }
+    }
+
+    /// Clear cookies from BOTH HTTPCookieStorage AND WKWebsiteDataStore.
+    /// Must be called before showing the login WebView to prevent auto-detection
+    /// of an existing session. Mirrors Hydra's clearSessionCookies().
+    func clearAllCookies() async {
+        // Clear HTTPCookieStorage
+        clearInjectedCookies()
+
+        // Clear WKWebsiteDataStore (the WebView's cookie jar)
+        let dataStore = WKWebsiteDataStore.default()
+        let cookies = await dataStore.httpCookieStore.allCookies()
+        for cookie in cookies where cookie.name == "reddit_session" {
+            await dataStore.httpCookieStore.deleteCookie(cookie)
         }
     }
 }

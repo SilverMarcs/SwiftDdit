@@ -18,10 +18,25 @@ struct LoginWebView {
         config.websiteDataStore = .default()
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
-        config.websiteDataStore.httpCookieStore.add(context.coordinator)
-        if let url = URL(string: "https://www.reddit.com/login") {
-            webView.load(URLRequest(url: url))
+
+        // Clear existing reddit_session cookies BEFORE loading the login page.
+        // Without this, the cookie observer fires immediately from the previous session.
+        let cookieStore = config.websiteDataStore.httpCookieStore
+        cookieStore.getAllCookies { cookies in
+            let group = DispatchGroup()
+            for cookie in cookies where cookie.name == "reddit_session" {
+                group.enter()
+                cookieStore.delete(cookie) { group.leave() }
+            }
+            group.notify(queue: .main) {
+                // Only start observing AFTER clearing, to avoid false triggers
+                cookieStore.add(context.coordinator)
+                if let url = URL(string: "https://www.reddit.com/login") {
+                    webView.load(URLRequest(url: url))
+                }
+            }
         }
+
         return webView
     }
 

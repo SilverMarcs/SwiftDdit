@@ -22,10 +22,6 @@ enum RedditAPI {
     /// Create a request with spoofed User-Agent and cookie-based auth.
     /// For POST/DELETE, includes X-Modhash header.
     static internal func createAuthenticatedRequest(url: URL, method: String = "GET") async -> URLRequest? {
-        guard CredentialsManager.shared.credential?.sessionCookie != nil else {
-            return nil
-        }
-
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.setValue(UserAgentGenerator.randomMobileSafari(), forHTTPHeaderField: "User-Agent")

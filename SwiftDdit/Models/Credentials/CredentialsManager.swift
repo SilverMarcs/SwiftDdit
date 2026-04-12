@@ -37,22 +37,54 @@ final class CredentialsManager {
         }
     }
 
+    // State saved before showing login WebView, restored on cancel
+    @ObservationIgnored private var savedCookieBeforeLogin: String?
+    @ObservationIgnored private var savedModhashBeforeLogin: String?
+
     // MARK: - Cookie-Based Login
 
+    /// Call before showing the login WebView. Clears all cookies so the WebView
+    /// shows a fresh login page (mirrors Hydra's doWithTempLogout pattern).
+    func prepareForNewLogin() async {
+        savedCookieBeforeLogin = credential?.sessionCookie
+        savedModhashBeforeLogin = RedditAPI.modhash
+        await CookieSessionManager.shared.clearAllCookies()
+        RedditAPI.modhash = nil
+        isShowingLoginWebView = true
+    }
+
+    /// Call when user cancels the login WebView. Restores the previous session.
+    func cancelLogin() {
+        isShowingLoginWebView = false
+        if let cookie = savedCookieBeforeLogin {
+            CookieSessionManager.shared.injectCookie(cookie)
+            RedditAPI.modhash = savedModhashBeforeLogin
+        }
+        savedCookieBeforeLogin = nil
+        savedModhashBeforeLogin = nil
+    }
+
     func handleLoginCookieReceived(cookie: String) async {
+        // Inject the new cookie so fetchMe() works
         CookieSessionManager.shared.injectCookie(cookie)
 
-        var newCredential = RedditCredential(sessionCookie: cookie)
-
+        let newCredential: RedditCredential
         if let userData = await RedditAPI.fetchMe() {
-            newCredential.userName = userData.name
-            if let iconImg = userData.icon_img, !iconImg.isEmpty {
-                newCredential.profilePicture = iconImg
-            }
+            let profilePic = (userData.icon_img?.isEmpty == false) ? userData.icon_img : nil
+            newCredential = RedditCredential(
+                sessionCookie: cookie,
+                userName: userData.name,
+                profilePicture: profilePic
+            )
             CookieSessionManager.shared.saveCookie(cookie, forUsername: userData.name)
+        } else {
+            // fetchMe failed but we still have a valid cookie — save what we can
+            newCredential = RedditCredential(sessionCookie: cookie)
         }
 
         saveCredential(newCredential)
+        savedCookieBeforeLogin = nil
+        savedModhashBeforeLogin = nil
         isShowingLoginWebView = false
     }
 
@@ -93,7 +125,7 @@ final class CredentialsManager {
             if let newActive = credential {
                 activateSession(for: newActive)
             } else {
-                CookieSessionManager.shared.clearInjectedCookies()
+                Task { await CookieSessionManager.shared.clearAllCookies() }
                 RedditAPI.modhash = nil
             }
         }
