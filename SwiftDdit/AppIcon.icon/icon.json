@@ -8,12 +8,56 @@
       "blur-material" : null,
       "layers" : [
         {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,1.00000"
+          },
+          "image-name" : "Gemini_Generated_Image_jb9mr8jb9mr8jb9m-Photoroom.png",
+          "name" : "Gemini_Generated_Image_jb9mr8jb9mr8jb9m-Photoroom",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,1.00000"
+          },
+          "hidden" : true,
+          "image-name" : "Gemini_Generated_Image_1b3r5m1b3r5m1b3r-removebg-preview.png",
+          "name" : "Gemini_Generated_Image_1b3r5m1b3r5m1b3r-removebg-preview",
+          "position" : {
+            "scale" : 1.55,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,1.00000"
+          },
+          "hidden" : true,
+          "image-name" : "Gemini_Generated_Image_3kruo93kruo93kru_copy-removebg-preview.png",
+          "name" : "Gemini_Generated_Image_3kruo93kruo93kru_copy-removebg-preview",
+          "position" : {
+            "scale" : 1.55,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
           "blend-mode" : "normal",
           "fill" : {
             "solid" : "extended-gray:1.00000,1.00000"
           },
           "glass" : true,
-          "hidden" : false,
+          "hidden" : true,
           "image-name" : "reddit.png",
           "name" : "reddit",
           "position" : {

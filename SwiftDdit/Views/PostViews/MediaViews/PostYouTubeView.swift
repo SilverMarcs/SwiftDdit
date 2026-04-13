@@ -26,7 +26,9 @@ struct PostYouTubeView: View {
 
         var configuration = WebPage.Configuration()
         configuration.defaultNavigationPreferences.allowsContentJavaScript = true
+        #if !os(macOS)
         configuration.mediaPlaybackBehavior = .allowsInlinePlayback
+        #endif
         _page = State(initialValue: WebPage(configuration: configuration))
     }
 

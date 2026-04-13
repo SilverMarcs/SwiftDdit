@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		082991C62F8CADB6001C6CA6 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 082991C52F8CADB6001C6CA6 /* AVKit.framework */; };
 		08BB35BF2E8494FF00BDF671 /* SwiftMediaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 08BB35BE2E8494FF00BDF671 /* SwiftMediaViewer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		082991C52F8CADB6001C6CA6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		08846F642DFF0E1B009F6F77 /* SwiftDdit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDdit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				082991C62F8CADB6001C6CA6 /* AVKit.framework in Frameworks */,
 				08BB35BF2E8494FF00BDF671 /* SwiftMediaViewer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -50,10 +53,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		082991C42F8CADB6001C6CA6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				082991C52F8CADB6001C6CA6 /* AVKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		08846F5B2DFF0E1B009F6F77 = {
 			isa = PBXGroup;
 			children = (
 				08846F662DFF0E1B009F6F77 /* SwiftDdit */,
+				082991C42F8CADB6001C6CA6 /* Frameworks */,
 				08846F652DFF0E1B009F6F77 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -290,6 +302,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftDdit/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Images to gallery";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -347,6 +360,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftDdit/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Images to gallery";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
