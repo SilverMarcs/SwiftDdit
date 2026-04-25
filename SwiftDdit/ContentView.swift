@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
     @State private var credentialsManager = CredentialsManager.shared
     @State private var selectedTab: AppTab = .home
 
@@ -17,7 +16,7 @@ struct ContentView: View {
             Tab("Home", systemImage: "doc.text.image", value: .home) {
                 HomeTab()
             }
-            
+
             Tab("Profile", systemImage: "person.fill", value: .profile) {
                 ProfileTab()
                     .overlay {
@@ -42,5 +41,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environment(SettingsNavigationCoordinator())
 }

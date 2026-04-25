@@ -8,12 +8,9 @@
 import SwiftUI
 
 struct UserSubredditsView: View {
-    @Environment(SettingsNavigationCoordinator.self) private var settingsNavigation
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
     @State private var searchText = ""
-
-    @Namespace private var transition
 
     var body: some View {
         List {
@@ -54,36 +51,15 @@ struct UserSubredditsView: View {
         }
         .navigationTitle("Profile")
         .toolbarTitleDisplayMode(.inlineLarge)
-        .sheet(item: settingsSheetBinding) { sheet in
-            switch sheet {
-            case .settings:
-                SettingsView()
-                #if !os(macOS)
-                    .navigationTransition(.zoom(sourceID: "settings-gear", in: transition))
-                #endif
-            }
-        }
         #if !os(macOS)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: openSettings) {
+                NavigationLink(value: SettingsDestination()) {
                     Image(systemName: "gear")
                 }
             }
-            .matchedTransitionSource(id: "settings-gear", in: transition)
         }
         #endif
-    }
-
-    private var settingsSheetBinding: Binding<SettingsNavigationCoordinator.SheetDestination?> {
-        Binding(
-            get: { settingsNavigation.presentedSheet },
-            set: { newValue in
-                if newValue == nil {
-                    settingsNavigation.dismissSettings()
-                }
-            }
-        )
     }
 
     private var groupedSubreddits: [String: [Subreddit]] {
@@ -103,9 +79,5 @@ struct UserSubredditsView: View {
                 subreddits = fetchedSubreddits.filter { $0.isSubscribed }
             }
         }
-    }
-
-    private func openSettings() {
-        settingsNavigation.presentSettings()
     }
 }

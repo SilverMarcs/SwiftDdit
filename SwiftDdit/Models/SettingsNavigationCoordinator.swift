@@ -7,36 +7,9 @@
 
 import SwiftUI
 
-@MainActor
-@Observable
-final class SettingsNavigationCoordinator {
-    enum SheetDestination: Hashable, Identifiable {
-        case settings
+struct SettingsDestination: Hashable {}
 
-        var id: Self { self }
-    }
-
-    enum Route: Hashable {
-        case accounts
-        case appIcon
-    }
-
-    var presentedSheet: SheetDestination?
-    var path = NavigationPath()
-
-    func presentSettings(open route: Route? = nil) {
-        if let route {
-            path = NavigationPath()
-            path.append(route)
-        } else if presentedSheet == nil {
-            path = NavigationPath()
-        }
-
-        presentedSheet = .settings
-    }
-
-    func dismissSettings() {
-        presentedSheet = nil
-        path = NavigationPath()
-    }
+enum SettingsRoute: Hashable {
+    case accounts
+    case appIcon
 }

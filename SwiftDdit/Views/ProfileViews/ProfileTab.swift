@@ -9,9 +9,11 @@ import SwiftUI
 import SwiftMediaViewer
 
 struct ProfileTab: View {
-    @Bindable var navigationManager = NavigationPathManager()
+    @State private var navigationManager = NavigationPathManager()
 
     var body: some View {
+        @Bindable var navigationManager = navigationManager
+
         NavigationStack(path: $navigationManager.path) {
             UserSubredditsView()
                 .navigationDestinations()

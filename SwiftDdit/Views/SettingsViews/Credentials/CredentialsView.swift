@@ -38,12 +38,18 @@ struct CredentialsView: View {
                 } label: {
                     Label("Add Account", systemImage: "plus.circle")
                 }
-            } footer: {
-                Text("Sign in with your Reddit account using the web login.")
             }
         }
         .navigationTitle("Accounts")
         .toolbarTitleDisplayMode(.inline)
+        .safeAreaBar(edge: .bottom) {
+            Text("Visit [reddit.com/settings](https://www.reddit.com/settings) to delete your account.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .padding(.vertical, 15)
+        }
         .alert("Error", isPresented: authErrorBinding) {
             Button("OK") {
                 credentialsManager.clearAuthError()

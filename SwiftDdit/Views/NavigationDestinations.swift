@@ -25,6 +25,21 @@ extension View {
             .navigationDestination(for: InboxDestination.self) { inbox in
                 InboxView()
             }
+            .navigationDestination(for: SettingsDestination.self) { _ in
+                SettingsView()
+            }
+            .navigationDestination(for: SettingsRoute.self) { route in
+                switch route {
+                case .accounts:
+                    CredentialsView()
+                case .appIcon:
+                    #if os(iOS) || os(tvOS) || os(visionOS)
+                    AppIconPicker()
+                    #else
+                    EmptyView()
+                    #endif
+                }
+            }
     }
 }
 
