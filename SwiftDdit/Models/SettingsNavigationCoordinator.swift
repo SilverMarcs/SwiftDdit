@@ -18,6 +18,7 @@ final class SettingsNavigationCoordinator {
 
     enum Route: Hashable {
         case accounts
+        case appIcon
     }
 
     var presentedSheet: SheetDestination?
