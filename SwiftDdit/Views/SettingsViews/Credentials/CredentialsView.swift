@@ -39,17 +39,23 @@ struct CredentialsView: View {
                     Label("Add Account", systemImage: "plus.circle")
                 }
             }
+
+            Section {
+                Link(destination: URL(string: "https://www.reddit.com/settings/account")!) {
+                    Label {
+                        Text("Delete Reddit Account")
+                            .foregroundStyle(.red)
+                    } icon: {
+                        Image(systemName: "xmark.bin.fill")
+                            .foregroundStyle(.red)
+                    }
+                }
+            } footer: {
+                Text("Removing an account above only signs out on this device. To permanently delete your Reddit account, tap the link above to manage it on reddit.com.")
+            }
         }
         .navigationTitle("Accounts")
         .toolbarTitleDisplayMode(.inline)
-        .safeAreaBar(edge: .bottom) {
-            Text("Visit [reddit.com/settings](https://www.reddit.com/settings) to delete your account.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .padding(.vertical, 15)
-        }
         .alert("Error", isPresented: authErrorBinding) {
             Button("OK") {
                 credentialsManager.clearAuthError()
