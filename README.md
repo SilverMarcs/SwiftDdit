@@ -3,6 +3,8 @@
 Simple SwiftUI Reddit client with Liquid Glass.
 Uses several new SwiftUI APIs introduced in WWDC25
 
+<a href="https://apps.apple.com/app/id6762110921"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store" height="50"></a>
+
 ## Features
 - Fetch Home feed and apply filters (Best/Top/Controversial etc)
 - See comments on posts along with comment filters
