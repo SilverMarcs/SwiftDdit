@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct UserSubredditsView: View {
+    @State private var credentialsManager = CredentialsManager.shared
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
     @State private var searchText = ""
@@ -30,6 +31,12 @@ struct UserSubredditsView: View {
         .overlay {
             if isLoading {
                 LoadingIndicator()
+            } else if credentialsManager.activeCredentialId == nil {
+                ContentUnavailableView(
+                    "No Account Connected",
+                    systemImage: "person.crop.circle.badge.exclamationmark",
+                    description: Text("Go to Settings > Credentials to add an account first")
+                )
             }
         }
         .searchable(text: Binding(

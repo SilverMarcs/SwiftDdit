@@ -19,18 +19,17 @@ struct LoginWebView {
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
 
-        // Clear existing reddit_session cookies BEFORE loading the login page.
-        // Without this, the cookie observer fires immediately from the previous session.
-        let cookieStore = config.websiteDataStore.httpCookieStore
-        cookieStore.getAllCookies { cookies in
-            let group = DispatchGroup()
-            for cookie in cookies where cookie.name == "reddit_session" {
-                group.enter()
-                cookieStore.delete(cookie) { group.leave() }
-            }
-            group.notify(queue: .main) {
+        // Wipe all Reddit website data (cookies, localStorage, IndexedDB, service workers,
+        // caches) BEFORE loading. Cookie-only scrub isn't sufficient across relaunches —
+        // Reddit's JS uses localStorage / service workers to silently re-auth and reissue
+        // a reddit_session for the previous user, which the observer would then capture.
+        let dataStore = config.websiteDataStore
+        let allTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+        dataStore.fetchDataRecords(ofTypes: allTypes) { records in
+            let redditRecords = records.filter { $0.displayName.contains("reddit") }
+            dataStore.removeData(ofTypes: allTypes, for: redditRecords) {
                 // Only start observing AFTER clearing, to avoid false triggers
-                cookieStore.add(context.coordinator)
+                dataStore.httpCookieStore.add(context.coordinator)
                 if let url = URL(string: "https://www.reddit.com/login") {
                     webView.load(URLRequest(url: url))
                 }

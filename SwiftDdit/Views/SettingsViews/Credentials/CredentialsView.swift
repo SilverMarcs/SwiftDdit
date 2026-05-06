@@ -34,7 +34,7 @@ struct CredentialsView: View {
 
             Section {
                 Button {
-                    Task { await credentialsManager.prepareForNewLogin() }
+                    credentialsManager.prepareForNewLogin()
                 } label: {
                     Label("Add Account", systemImage: "plus.circle")
                 }
@@ -78,23 +78,14 @@ struct CredentialsView: View {
         } message: {
             Text("Are you sure you want to delete this account? This action cannot be undone.")
         }
-        .sheet(isPresented: $credentialsManager.isShowingLoginWebView) {
-            NavigationStack {
-                LoginWebView { cookie in
-                    Task {
-                        await credentialsManager.handleLoginCookieReceived(cookie: cookie)
-                    }
-                }
-                .navigationTitle("Sign in to Reddit")
-                .toolbarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            credentialsManager.cancelLogin()
-                        }
-                    }
+        .navigationDestination(isPresented: $credentialsManager.isShowingLoginWebView) {
+            LoginWebView { cookie in
+                Task {
+                    await credentialsManager.handleLoginCookieReceived(cookie: cookie)
                 }
             }
+            .navigationTitle("Sign in to Reddit")
+            .toolbarTitleDisplayMode(.inline)
         }
     }
 

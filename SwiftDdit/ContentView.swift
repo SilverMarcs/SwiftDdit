@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var credentialsManager = CredentialsManager.shared
     @State private var selectedTab: AppTab = .home
 
     var body: some View {
@@ -19,15 +18,6 @@ struct ContentView: View {
 
             Tab("Profile", systemImage: "person.fill", value: .profile) {
                 ProfileTab()
-                    .overlay {
-                        if credentialsManager.activeCredentialId == nil {
-                            ContentUnavailableView(
-                                "No Account Connected",
-                                systemImage: "person.crop.circle.badge.exclamationmark",
-                                description: Text("Go to Profile tab and click Settings > Credentials to add an account first")
-                            )
-                        }
-                    }
             }
 
             Tab(value: .search, role: .search) {

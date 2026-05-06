@@ -9,11 +9,11 @@ import SwiftUI
 
 struct AccountRowView: View {
     let credential: RedditCredential
-    
+
     private var isActive: Bool {
         CredentialsManager.shared.activeCredentialId == credential.id
     }
-    
+
     var body: some View {
         Button {
             if !isActive {
@@ -28,9 +28,9 @@ struct AccountRowView: View {
                     Image(systemName: "key.fill")
                         .foregroundStyle(credential.validationStatus.meta.color)
                 }
-                
+
                 Spacer()
-                
+
                 if isActive {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.green)
