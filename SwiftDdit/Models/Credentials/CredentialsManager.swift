@@ -149,7 +149,7 @@ final class CredentialsManager {
         credentials.removeAll()
         activeCredentialId = nil
         keychainManager.delete(key: credentialsKey)
-        keychainManager.delete(key: activeCredentialKey)
+        UserDefaults.standard.removeObject(forKey: activeCredentialKey)
         keychainManager.delete(key: legacyCredentialKey)
     }
 
@@ -163,7 +163,7 @@ final class CredentialsManager {
            let loadedCredentials = try? JSONDecoder().decode([RedditCredential].self, from: data) {
             self.credentials = loadedCredentials
 
-            if let activeIdString = keychainManager.load(key: activeCredentialKey),
+            if let activeIdString = UserDefaults.standard.string(forKey: activeCredentialKey),
                let activeId = UUID(uuidString: activeIdString) {
                 self.activeCredentialId = activeId
             } else {
@@ -187,9 +187,9 @@ final class CredentialsManager {
 
     private func saveActiveCredentialId() {
         if let activeCredentialId = activeCredentialId {
-            keychainManager.save(key: activeCredentialKey, data: activeCredentialId.uuidString)
+            UserDefaults.standard.set(activeCredentialId.uuidString, forKey: activeCredentialKey)
         } else {
-            keychainManager.delete(key: activeCredentialKey)
+            UserDefaults.standard.removeObject(forKey: activeCredentialKey)
         }
     }
 }
