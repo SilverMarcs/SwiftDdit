@@ -13,11 +13,11 @@
 
 /* Begin PBXFileReference section */
 		082991C52F8CADB6001C6CA6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
-		08846F642DFF0E1B009F6F77 /* SwiftDdit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDdit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08846F642DFF0E1B009F6F77 /* Lurker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lurker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0826F52F2E00486900B326FF /* Exceptions for "SwiftDdit" folder in "SwiftDdit" target */ = {
+		0826F52F2E00486900B326FF /* Exceptions for "Lurker" folder in "Lurker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -25,17 +25,17 @@
 			platformFiltersByRelativePath = {
 				Views/TextSelectionView.swift = (ios, xros, );
 			};
-			target = 08846F632DFF0E1B009F6F77 /* SwiftDdit */;
+			target = 08846F632DFF0E1B009F6F77 /* Lurker */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		08846F662DFF0E1B009F6F77 /* SwiftDdit */ = {
+		08846F662DFF0E1B009F6F77 /* Lurker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0826F52F2E00486900B326FF /* Exceptions for "SwiftDdit" folder in "SwiftDdit" target */,
+				0826F52F2E00486900B326FF /* Exceptions for "Lurker" folder in "Lurker" target */,
 			);
-			path = SwiftDdit;
+			path = Lurker;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -64,7 +64,7 @@
 		08846F5B2DFF0E1B009F6F77 = {
 			isa = PBXGroup;
 			children = (
-				08846F662DFF0E1B009F6F77 /* SwiftDdit */,
+				08846F662DFF0E1B009F6F77 /* Lurker */,
 				082991C42F8CADB6001C6CA6 /* Frameworks */,
 				08846F652DFF0E1B009F6F77 /* Products */,
 			);
@@ -73,7 +73,7 @@
 		08846F652DFF0E1B009F6F77 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08846F642DFF0E1B009F6F77 /* SwiftDdit.app */,
+				08846F642DFF0E1B009F6F77 /* Lurker.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,9 +81,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		08846F632DFF0E1B009F6F77 /* SwiftDdit */ = {
+		08846F632DFF0E1B009F6F77 /* Lurker */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08846F6F2DFF0E1D009F6F77 /* Build configuration list for PBXNativeTarget "SwiftDdit" */;
+			buildConfigurationList = 08846F6F2DFF0E1D009F6F77 /* Build configuration list for PBXNativeTarget "Lurker" */;
 			buildPhases = (
 				08846F602DFF0E1B009F6F77 /* Sources */,
 				08846F612DFF0E1B009F6F77 /* Frameworks */,
@@ -94,14 +94,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				08846F662DFF0E1B009F6F77 /* SwiftDdit */,
+				08846F662DFF0E1B009F6F77 /* Lurker */,
 			);
-			name = SwiftDdit;
+			name = Lurker;
 			packageProductDependencies = (
 				08BB35BE2E8494FF00BDF671 /* SwiftMediaViewer */,
 			);
-			productName = SwiftDdit;
-			productReference = 08846F642DFF0E1B009F6F77 /* SwiftDdit.app */;
+			productName = Lurker;
+			productReference = 08846F642DFF0E1B009F6F77 /* Lurker.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -119,7 +119,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 08846F5F2DFF0E1B009F6F77 /* Build configuration list for PBXProject "SwiftDdit" */;
+			buildConfigurationList = 08846F5F2DFF0E1B009F6F77 /* Build configuration list for PBXProject "Lurker" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -136,7 +136,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				08846F632DFF0E1B009F6F77 /* SwiftDdit */,
+				08846F632DFF0E1B009F6F77 /* Lurker */,
 			);
 		};
 /* End PBXProject section */
@@ -302,7 +302,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftDdit/Info.plist;
+				INFOPLIST_FILE = Lurker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Lurker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Images to gallery";
@@ -321,7 +321,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.SwiftDdit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.Lurker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -362,7 +362,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftDdit/Info.plist;
+				INFOPLIST_FILE = Lurker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Lurker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Images to gallery";
@@ -381,7 +381,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.SwiftDdit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.Lurker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -401,7 +401,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		08846F5F2DFF0E1B009F6F77 /* Build configuration list for PBXProject "SwiftDdit" */ = {
+		08846F5F2DFF0E1B009F6F77 /* Build configuration list for PBXProject "Lurker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08846F6D2DFF0E1D009F6F77 /* Debug */,
@@ -410,7 +410,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08846F6F2DFF0E1D009F6F77 /* Build configuration list for PBXNativeTarget "SwiftDdit" */ = {
+		08846F6F2DFF0E1D009F6F77 /* Build configuration list for PBXNativeTarget "Lurker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08846F702DFF0E1D009F6F77 /* Debug */,

@@ -104,7 +104,7 @@ struct PostYouTubeView: View {
             }
         }
 
-        window.__swiftDditPlay = function() {
+        window.__lurkerPlay = function() {
             shouldPlay = true;
             if (player && player.playVideo) {
                 if (shouldMute && player.mute) {
@@ -121,7 +121,7 @@ struct PostYouTubeView: View {
         do {
             for try await _ in page.load(html: html, baseURL: baseURL) {}
             _ = try? await page.callJavaScript(
-                "window.__swiftDditPlay && window.__swiftDditPlay();",
+                "window.__lurkerPlay && window.__lurkerPlay();",
                 arguments: [:],
                 in: nil,
                 contentWorld: nil

@@ -9,10 +9,10 @@ import SwiftUI
 import AVKit
 
 @main
-struct SwiftDditApp: App {
+struct LurkerApp: App {
     var body: some Scene {
         #if os(macOS)
-        Window("SwiftDdit", id: "SwiftDdit") {
+        Window("Lurker", id: "Lurker") {
             ContentView()
                 .onAppear {
                    NSWindow.allowsAutomaticWindowTabbing = false

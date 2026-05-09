@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "08846F632DFF0E1B009F6F77"
-               BuildableName = "SwiftDdit.app"
-               BlueprintName = "SwiftDdit"
-               ReferencedContainer = "container:SwiftDdit.xcodeproj">
+               BuildableName = "Lurker.app"
+               BlueprintName = "Lurker"
+               ReferencedContainer = "container:Lurker.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "08846F632DFF0E1B009F6F77"
-            BuildableName = "SwiftDdit.app"
-            BlueprintName = "SwiftDdit"
-            ReferencedContainer = "container:SwiftDdit.xcodeproj">
+            BuildableName = "Lurker.app"
+            BlueprintName = "Lurker"
+            ReferencedContainer = "container:Lurker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "08846F632DFF0E1B009F6F77"
-            BuildableName = "SwiftDdit.app"
-            BlueprintName = "SwiftDdit"
-            ReferencedContainer = "container:SwiftDdit.xcodeproj">
+            BuildableName = "Lurker.app"
+            BlueprintName = "Lurker"
+            ReferencedContainer = "container:Lurker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

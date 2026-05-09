@@ -4,7 +4,7 @@ import Security
 final class KeychainManager {
     static let shared = KeychainManager()
 
-    private let service = Bundle.main.bundleIdentifier ?? "com.SilverMarcs.SwiftDdit"
+    private let service = Bundle.main.bundleIdentifier ?? "com.SilverMarcs.Lurker"
 
     private init() {}
 
