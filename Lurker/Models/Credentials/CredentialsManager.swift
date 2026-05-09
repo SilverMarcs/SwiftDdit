@@ -158,18 +158,42 @@ final class CredentialsManager {
     }
 
     private func loadCredentials() {
-        if let credentialsData = keychainManager.load(key: credentialsKey),
-           let data = credentialsData.data(using: .utf8),
-           let loadedCredentials = try? JSONDecoder().decode([RedditCredential].self, from: data) {
-            self.credentials = loadedCredentials
+        var credentialsJSON = keychainManager.load(key: credentialsKey)
 
-            if let activeIdString = UserDefaults.standard.string(forKey: activeCredentialKey),
-               let activeId = UUID(uuidString: activeIdString) {
-                self.activeCredentialId = activeId
-            } else {
-                self.activeCredentialId = loadedCredentials.first?.id
-            }
+        // One-shot migration: previous builds stored credentials in the iCloud-synced
+        // keychain bucket. Move any leftover synced copy into the local bucket so
+        // accounts no longer roam between devices.
+        if credentialsJSON == nil,
+           let syncedJSON = keychainManager.load(key: credentialsKey, synchronizable: true) {
+            keychainManager.save(key: credentialsKey, data: syncedJSON)
+            keychainManager.delete(key: credentialsKey, synchronizable: true)
+            credentialsJSON = syncedJSON
+        }
+
+        guard let credentialsJSON,
+              let data = credentialsJSON.data(using: .utf8),
+              let loadedCredentials = try? JSONDecoder().decode([RedditCredential].self, from: data) else {
             return
+        }
+
+        self.credentials = loadedCredentials
+
+        // Migrate per-username session cookies out of the synced bucket too.
+        for cred in loadedCredentials {
+            guard let username = cred.userName else { continue }
+            let cookieKey = "reddit_session_\(username)"
+            if keychainManager.load(key: cookieKey) == nil,
+               let syncedCookie = keychainManager.load(key: cookieKey, synchronizable: true) {
+                keychainManager.save(key: cookieKey, data: syncedCookie)
+                keychainManager.delete(key: cookieKey, synchronizable: true)
+            }
+        }
+
+        if let activeIdString = UserDefaults.standard.string(forKey: activeCredentialKey),
+           let activeId = UUID(uuidString: activeIdString) {
+            self.activeCredentialId = activeId
+        } else {
+            self.activeCredentialId = loadedCredentials.first?.id
         }
     }
 

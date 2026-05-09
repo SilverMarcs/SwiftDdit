@@ -8,27 +8,27 @@ final class KeychainManager {
 
     private init() {}
 
-    func save(key: String, data: String) {
+    func save(key: String, data: String, synchronizable: Bool = false) {
         guard let valueData = data.data(using: .utf8) else { return }
 
-        delete(key: key)
+        delete(key: key, synchronizable: synchronizable)
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
-            kSecAttrSynchronizable as String: kCFBooleanTrue!,
+            kSecAttrSynchronizable as String: synchronizable ? kCFBooleanTrue! : kCFBooleanFalse!,
             kSecValueData as String: valueData
         ]
         SecItemAdd(query as CFDictionary, nil)
     }
 
-    func load(key: String) -> String? {
+    func load(key: String, synchronizable: Bool = false) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
-            kSecAttrSynchronizable as String: kCFBooleanTrue!,
+            kSecAttrSynchronizable as String: synchronizable ? kCFBooleanTrue! : kCFBooleanFalse!,
             kSecReturnData as String: kCFBooleanTrue!,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
@@ -38,12 +38,15 @@ final class KeychainManager {
         return String(data: data, encoding: .utf8)
     }
 
-    func delete(key: String) {
+    /// Pass `synchronizable: nil` to delete from both local and iCloud-synced
+    /// buckets (e.g. on logout). Pass an explicit value to scope the delete.
+    func delete(key: String, synchronizable: Bool? = nil) {
+        let syncValue: Any = synchronizable.map { $0 ? kCFBooleanTrue! : kCFBooleanFalse! } ?? kSecAttrSynchronizableAny
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
-            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
+            kSecAttrSynchronizable as String: syncValue
         ]
         SecItemDelete(query as CFDictionary)
     }
