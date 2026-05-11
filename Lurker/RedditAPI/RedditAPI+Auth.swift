@@ -21,16 +21,22 @@ extension RedditAPI {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+            let status = (response as? HTTPURLResponse)?.statusCode ?? -1
+            print("[RedditAPI] fetchMe — status=\(status)")
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return nil }
 
             let meResponse = try JSONDecoder().decode(MeResponse.self, from: data)
 
             if let modhash = meResponse.data.modhash, !modhash.isEmpty {
+                print("[RedditAPI] fetchMe — got modhash=\(modhash.prefix(6))…, user=\(meResponse.data.name)")
                 Self.modhash = modhash
+            } else {
+                print("[RedditAPI] fetchMe — NO modhash in response (data.modhash empty/nil)")
             }
 
             return meResponse.data
         } catch {
+            print("[RedditAPI] fetchMe — error=\(error)")
             return nil
         }
     }
