@@ -45,10 +45,21 @@ struct CommentView: View {
                     CommentHeader(comment: comment)
 
                     if !isCollapsed {
-                        Text(LocalizedStringKey(comment.body))
-                            .font(.default)
-                            .opacity(0.85)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !comment.body.isEmpty {
+                            Text(LocalizedStringKey(comment.body))
+                                .font(.default)
+                                .opacity(0.85)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        ForEach(comment.embeddedMedia) { media in
+                            switch media.kind {
+                            case .gif:
+                                PostGIFView(galleryImage: media.image)
+                            case .image:
+                                PostImageView(image: media.image)
+                            }
+                        }
                     }
 
                     if comment.hasChildren && isCollapsed {

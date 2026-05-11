@@ -23,7 +23,10 @@ struct Comment: Identifiable, Hashable, Votable {
     let distinguished: String?
     let stickied: Bool
     let likes: Bool?
-    
+
+    // Media embedded in comment markdown (giphy gifs, reddit-hosted images, inline image links)
+    let embeddedMedia: [CommentMedia]
+
     // Flattened display properties
     let hasChildren: Bool
     let childCount: Int
@@ -49,7 +52,9 @@ struct Comment: Identifiable, Hashable, Votable {
     init(from commentData: CommentData, hasChildren: Bool = false, childCount: Int = 0, childIds: [String] = []) {
         self.id = commentData.id
         self.author = commentData.author ?? "[deleted]"
-        self.body = commentData.body ?? "[deleted]"
+        let rawBody = commentData.body ?? "[deleted]"
+        self.embeddedMedia = Comment.extractEmbeddedMedia(from: commentData)
+        self.body = Comment.stripMediaTokens(from: rawBody)
         self.created = commentData.created_utc ?? 0
         self.score = commentData.score ?? commentData.ups ?? 0
         self.ups = commentData.ups ?? 0
@@ -106,6 +111,7 @@ struct Comment: Identifiable, Hashable, Votable {
         self.hasChildren = false
         self.childCount = 0
         self.childIds = []
+        self.embeddedMedia = []
         
         // Pre-compute formatted values
         self.formattedUps = 1.formatted

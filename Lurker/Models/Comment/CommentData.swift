@@ -44,7 +44,10 @@ struct CommentData: Identifiable, Codable, Hashable {
     let gilded: Int?
     let total_awards_received: Int?
     let top_awarded_type: String?
-    
+
+    // Embedded media (giphy gifs, reddit-hosted images) referenced from body markdown
+    let media_metadata: [String: MediaMetadataItem?]?
+
     static func == (lhs: CommentData, rhs: CommentData) -> Bool {
         return lhs.id == rhs.id &&
                lhs.author == rhs.author &&
