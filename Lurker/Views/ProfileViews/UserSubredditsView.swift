@@ -58,15 +58,15 @@ struct UserSubredditsView: View {
         }
         .navigationTitle("Profile")
         .toolbarTitleDisplayMode(.inlineLarge)
-        #if !os(macOS)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                NavigationLink(value: SettingsDestination()) {
-                    Image(systemName: "gear")
+            if Device.isIPhone {
+                ToolbarItem(placement: .primaryAction) {
+                    NavigationLink(value: SettingsDestination()) {
+                        Image(systemName: "gear")
+                    }
                 }
             }
         }
-        #endif
     }
 
     private var groupedSubreddits: [String: [Subreddit]] {

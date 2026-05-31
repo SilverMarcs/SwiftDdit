@@ -45,7 +45,7 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
-        .toolbarTitleDisplayMode(.inline)
+        .toolbarTitleDisplayMode(isMacOrPad ? .inlineLarge : .inline)
         .safeAreaInset(edge: .bottom) {
             Color.clear
                 .frame(height: 44)

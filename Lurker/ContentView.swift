@@ -20,11 +20,14 @@ struct ContentView: View {
                 ProfileTab()
             }
             
-            #if os(macOS)
-            Tab("Settings", systemImage: "gear", value: .profile) {
-                ProfileTab()
+            if isMacOrPad {
+                Tab("Settings", systemImage: "gear", value: .settings) {
+                    NavigationStack {
+                        SettingsView()
+                            .navigationDestinations()
+                    }
+                }
             }
-            #endif
 
             Tab(value: .search, role: .search) {
                 SearchTab()

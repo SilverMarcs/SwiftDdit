@@ -31,6 +31,8 @@ struct PostsList: View {
                         #endif
                 }
                 .buttonStyle(.plain)
+                .frame(maxWidth: 750)
+                .frame(maxWidth: .infinity)
                 .listRowInsets(.vertical, 5)
                 .listRowInsets(.horizontal, 6)
             }
@@ -39,6 +41,7 @@ struct PostsList: View {
             Color.clear
                 .frame(height: 1)
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
                 .onAppear {
                     if !dataSource.isLoading && dataSource.after != nil && dataSource.searchText.isEmpty {
                         Task {
@@ -50,10 +53,10 @@ struct PostsList: View {
             if dataSource.isLoading {
                 LoadingIndicator()
                     .id(UUID())
+                    .listRowBackground(Color.clear)
             }
         }
         #if os(macOS)
-        .frame(maxWidth: 600)
         .scrollIndicators(.hidden)
         #endif
         .listStyle(.plain)
