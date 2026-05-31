@@ -10,5 +10,6 @@ import Foundation
 enum AppTab: Hashable {
     case home
     case profile
+    case settings
     case search
 }

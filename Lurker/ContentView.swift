@@ -19,12 +19,20 @@ struct ContentView: View {
             Tab("Profile", systemImage: "person.fill", value: .profile) {
                 ProfileTab()
             }
+            
+            #if os(macOS)
+            Tab("Settings", systemImage: "gear", value: .profile) {
+                ProfileTab()
+            }
+            #endif
 
             Tab(value: .search, role: .search) {
                 SearchTab()
             }
         }
+        #if !os(macOS)
         .tabViewStyle(.sidebarAdaptable)
+        #endif
         .tabViewSearchActivation(.searchTabSelection)
     }
 }
