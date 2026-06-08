@@ -46,6 +46,18 @@ struct PostView: View {
                     .cornerRadius(4)
             }
 
+            if !isCompact && isIPhone {
+                Button {
+                    navigationManager.path.append(PostFeedType.user(post.author))
+                } label: {
+                    Label("u/" + post.author, systemImage: "person")
+                        .font(.caption)
+                        .bold()
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+
           // ADD NSFW BADGE
             if !post.selftext.isEmpty {
                 Text(LocalizedStringKey(post.selftext))
@@ -78,6 +90,17 @@ struct PostView: View {
                              Image(systemName: "clock")
 
                              Text(post.timeAgo)
+                         }
+
+                          if isIPad {
+                             Button {
+                                 navigationManager.path.append(PostFeedType.user(post.author))
+                             } label: {
+                                Image(systemName: "person")
+                                
+                                Text("u/" + post.author)
+                             }
+                             .buttonStyle(.plain)
                          }
                    }
                    .font(.caption)

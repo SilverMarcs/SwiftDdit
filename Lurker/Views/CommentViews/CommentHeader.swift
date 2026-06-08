@@ -9,6 +9,9 @@ import SwiftUI
 
 struct CommentHeader: View {
     let comment: Comment
+
+    @Environment(NavigationPathManager.self) var navigationManager
+
     
     var body: some View {
         HStack {
@@ -20,13 +23,16 @@ struct CommentHeader: View {
                             .foregroundStyle(.green)
                     }
                     
-                    Text(comment.author)
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundStyle(
-                            comment.distinguished == "moderator" ? .green :
-                                (comment.isSubmitter ? .blue : .secondary)
-                        )
+                    Button(comment.author) {
+                        navigationManager.path.append(PostFeedType.user(comment.author))
+                    }
+                    .font(.caption)
+                    .bold()
+                    .foregroundStyle(
+                        comment.distinguished == "moderator" ? .green :
+                            (comment.isSubmitter ? .blue : .secondary)
+                    )
+                    .buttonStyle(.plain)
                     
                     if let flairText = comment.authorFlairText, !flairText.isEmpty {
                         Text(flairText)

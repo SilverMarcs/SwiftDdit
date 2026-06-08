@@ -64,8 +64,10 @@ struct PostDetailView: View {
                     }
                 }
             }
+            .frame(maxWidth: 800, alignment: .center)
+            .frame(maxWidth: .infinity)
+            .contentShape(.rect)
             #if os(macOS)
-            .frame(maxWidth: 600, alignment: .center)
             .scenePadding(.vertical)
             #endif
             .scenePadding(.horizontal)

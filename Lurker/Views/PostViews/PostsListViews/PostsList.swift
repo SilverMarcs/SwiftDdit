@@ -31,7 +31,7 @@ struct PostsList: View {
                         #endif
                 }
                 .buttonStyle(.plain)
-                .frame(maxWidth: 750)
+                .frame(maxWidth: 800)
                 .frame(maxWidth: .infinity)
                 .listRowInsets(.vertical, 5)
                 .listRowInsets(.horizontal, 6)
