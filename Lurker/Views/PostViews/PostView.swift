@@ -110,7 +110,27 @@ struct PostView: View {
 
                Spacer()
 
-               if !isCompact {
+               if isMacOrPad {
+                   Button {
+                       showCommentSheet = true
+                   } label: {
+                       Image(systemName: "arrowshape.turn.up.backward.fill")
+                           .font(.headline)
+                           .foregroundStyle(.accent)
+                           .padding(3.5)
+                   }
+                   .matchedTransitionSource(id: "reply-button", in: transition)
+                   .buttonStyle(.glass)
+                   .buttonBorderShape(.circle)
+                   
+                  toggleSaveButton
+                       .font(.headline)
+                       .labelStyle(.iconOnly)
+                       .buttonStyle(.glass)
+                       .controlSize(.regular)
+                       .buttonBorderShape(.circle)
+
+               } else if !isCompact {
                    Button {
                        showCommentSheet = true
                    } label: {
