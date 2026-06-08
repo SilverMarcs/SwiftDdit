@@ -22,20 +22,22 @@ struct PostVideoView: View {
             if autoplay || showVideo {
                 SMVVideo(videoURL: videoURL, autoplay: true, muteOnPlay: muteOnPlay)
             } else {
-                CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 450)
-                    .overlay(
-                        Image(systemName: "play.fill")
-                            .imageScale(.large)
-                            .padding()
-                            .glassEffect(in: .circle)
-                            .foregroundStyle(.white)
-                    )
-                    .onTapGesture {
-                        showVideo = true
-                    }
+                Button(action: {
+                    showVideo = true
+                }) {
+                    CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 450)
+                        .overlay(
+                            Image(systemName: "play.fill")
+                                .imageScale(.large)
+                                .padding()
+                                .glassEffect(in: .circle)
+                                .foregroundStyle(.white)
+                        )
+                }
+                .buttonStyle(.plain)
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(.rect(cornerRadius: 12))
         .aspectRatio(Self.safeAspectRatio(from: dimensions), contentMode: .fit)
     }
 }

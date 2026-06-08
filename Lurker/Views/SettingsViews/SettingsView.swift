@@ -16,7 +16,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("Reddit API") {
+            Section("Reddit Login") {
                 NavigationLink(value: SettingsRoute.accounts) {
                     Label("Accounts", systemImage: "person.fill")
                 }
