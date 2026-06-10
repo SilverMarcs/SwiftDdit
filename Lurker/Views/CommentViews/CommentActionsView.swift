@@ -40,6 +40,6 @@ struct CommentActionsView: View {
         }
         .fontWeight(.semibold)
         .padding(8)
-        .glassEffect(.regular.interactive())
+        .background(.background.secondary, in: .capsule)
     }
 }

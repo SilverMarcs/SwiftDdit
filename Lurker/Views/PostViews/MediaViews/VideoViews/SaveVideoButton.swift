@@ -19,9 +19,11 @@ struct SaveVideoButton: View {
             }
         } label: {
             Image(systemName: isSaving ? "checkmark" : "arrow.down")
+                .font(.headline)
+                .padding(10)
         }
-        .buttonStyle(.glass)
-        .controlSize(.large)
+        .buttonStyle(.plain)
+        .background(.background.secondary, in: .circle)
         .disabled(isSaving)
     }
     

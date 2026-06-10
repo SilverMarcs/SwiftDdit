@@ -30,14 +30,11 @@ struct PostVideoView: View {
                             Image(systemName: "play.fill")
                                 .imageScale(.large)
                                 .padding()
-                                .glassEffect(in: .circle)
+                                .background(.black.opacity(0.5), in: .circle)
                                 .foregroundStyle(.white)
                         )
                 }
                 .buttonStyle(.plain)
-                // Defer autoplay until the preview has lingered ~1s on screen, so
-                // videos flicked past during a fast scroll never build a player.
-                // .task is cancelled on disappear, so the sleep simply unwinds.
                 .task {
                     guard autoplay else { return }
                     do {

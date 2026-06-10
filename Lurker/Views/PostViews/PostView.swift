@@ -117,38 +117,40 @@ struct PostView: View {
                        Image(systemName: "arrowshape.turn.up.backward.fill")
                            .font(.headline)
                            .foregroundStyle(.accent)
-                           .padding(3.5)
+                           .padding(8)
                    }
                    .matchedTransitionSource(id: "reply-button", in: transition)
-                   .buttonStyle(.glass)
-                   .buttonBorderShape(.circle)
+                   .buttonStyle(.plain)
+                   .background(.background.secondary, in: .circle)
                    
                   toggleSaveButton
                        .font(.headline)
                        .labelStyle(.iconOnly)
-                       .buttonStyle(.glass)
-                       .controlSize(.regular)
-                       .buttonBorderShape(.circle)
+                       .buttonStyle(.plain)
+                       .background(.background.secondary, in: .circle)
 
                } else if !isCompact {
                    Button {
                        showCommentSheet = true
                    } label: {
                        Image(systemName: "arrowshape.turn.up.backward.fill")
-                           .font(.headline)
+                           .padding(8)
                            .foregroundStyle(.accent)
-                           .padding(3.5)
+               
                    }
                    .matchedTransitionSource(id: "reply-button", in: transition)
-                   .buttonStyle(.glass)
-                   .buttonBorderShape(.circle)
+                       .font(.title2)
+                    // .fontWeight(.semibold)
+                   .buttonStyle(.plain)
+                   .background(.background.secondary, in: .circle)
                } else {
                    toggleSaveButton
-                       .font(.headline)
-                       .labelStyle(.iconOnly)
-                       .buttonStyle(.glass)
-                       .controlSize(.regular)
-                       .buttonBorderShape(.circle)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(isSaved ? .green : .secondary)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.plain)
+                    .background(.background.secondary, in: .circle)
                }
                
                PostActionsView(post: post)
@@ -222,8 +224,7 @@ struct PostView: View {
             }
         } label: {
             Label(isSaved ? "Unsave" : "Save", systemImage: isSaved ? "bookmark.fill" : "bookmark")
-                .padding(2)
+                .padding(8)
         }
-        .foregroundStyle(isSaved ? .green : .secondary)
     }
 }
