@@ -19,7 +19,7 @@ struct PostVideoView: View {
 
     var body: some View {
         Group {
-            if autoplay || showVideo {
+            if showVideo {
                 SMVVideo(videoURL: videoURL, autoplay: true, muteOnPlay: muteOnPlay)
             } else {
                 Button(action: {
@@ -35,6 +35,18 @@ struct PostVideoView: View {
                         )
                 }
                 .buttonStyle(.plain)
+                // Defer autoplay until the preview has lingered ~1s on screen, so
+                // videos flicked past during a fast scroll never build a player.
+                // .task is cancelled on disappear, so the sleep simply unwinds.
+                .task {
+                    guard autoplay else { return }
+                    do {
+                        try await Task.sleep(for: .seconds(1))
+                    } catch {
+                        return
+                    }
+                    showVideo = true
+                }
             }
         }
         .clipShape(.rect(cornerRadius: 12))
