@@ -11,13 +11,14 @@ import SwiftUI
     private(set) var posts: [Post] = []
     private(set) var isLoading = false
     @ObservationIgnored private(set) var after: String?
-    var currentSort: SubListingSortOption = .best
+    var currentSort: SubListingSortOption
     var searchText = ""
-    
+
     @ObservationIgnored private let feedType: PostFeedType
-    
+
     init(feedType: PostFeedType) {
         self.feedType = feedType
+        self.currentSort = feedType.defaultSort
     }
     
     func loadInitialPosts() async {

@@ -43,7 +43,13 @@ extension RedditAPI {
         switch feedType {
         case .home:
             return "/\(sortPath)"
-            
+
+        case .popular:
+            return "/r/popular/\(sortPath)"
+
+        case .all:
+            return "/r/all/\(sortPath)"
+
         case .subreddit(let subreddit):
             let subredditPath = "r/\(subreddit.displayName)"
             return "/\(subredditPath)/\(sortPath)"

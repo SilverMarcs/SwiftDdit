@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserSubredditsView: View {
     @State private var credentialsManager = CredentialsManager.shared
+    @State private var favorites = FavoritesManager.shared
     @State private var subreddits: [Subreddit] = []
     @State private var isLoading = false
     @State private var searchText = ""
@@ -16,6 +17,15 @@ struct UserSubredditsView: View {
     var body: some View {
         List {
             UserLinks()
+
+            if !favoriteSubreddits.isEmpty {
+                Section("Favorites") {
+                    ForEach(favoriteSubreddits, id: \.id) { subreddit in
+                        SubredditRowView(subreddit: subreddit)
+                    }
+                }
+                .sectionIndexLabel("★")
+            }
 
             ForEach(sortedSectionKeys, id: \.self) { letter in
                 Section(letter) {
@@ -69,9 +79,21 @@ struct UserSubredditsView: View {
         }
     }
 
+    private var filteredSubreddits: [Subreddit] {
+        searchText.isEmpty ? subreddits : subreddits.filter { $0.displayName.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    /// Favorited subreddits surface in their own top section, so they're excluded
+    /// from the lettered sections below to avoid duplicates.
+    private var favoriteSubreddits: [Subreddit] {
+        filteredSubreddits
+            .filter { favorites.isFavorite($0) }
+            .sorted { $0.displayName < $1.displayName }
+    }
+
     private var groupedSubreddits: [String: [Subreddit]] {
-        let filtered = searchText.isEmpty ? subreddits : subreddits.filter { $0.displayName.localizedCaseInsensitiveContains(searchText) }
-        return Dictionary(grouping: filtered) { subreddit in
+        let nonFavorites = filteredSubreddits.filter { !favorites.isFavorite($0) }
+        return Dictionary(grouping: nonFavorites) { subreddit in
             String(subreddit.displayName.prefix(1).uppercased())
         }
     }
