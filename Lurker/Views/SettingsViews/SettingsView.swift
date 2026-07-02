@@ -12,6 +12,9 @@ struct SettingsView: View {
     @AppStorage("autoplay") var autoplay: Bool = true
     @AppStorage("muteOnPlay") var muteOnPlay: Bool = false
     @AppStorage("showAppIconPicker") var showAppIconPicker: Bool = false
+    @AppStorage(SettingsKeys.persistFeed) var persistFeed: Bool = false
+    @AppStorage(SettingsKeys.persistSort) var persistSort: Bool = false
+    @AppStorage(SettingsKeys.hideFeedSwitcher) var hideFeedSwitcher: Bool = false
     @State private var easterEggTapCount = 0
 
     var body: some View {
@@ -22,15 +25,27 @@ struct SettingsView: View {
                 }
             }
 
-            #if os(iOS) || os(tvOS) || os(visionOS)
             if showAppIconPicker {
                 Section {
+                    #if os(iOS) || os(tvOS) || os(visionOS)
                     NavigationLink(value: SettingsRoute.appIcon) {
                         Label("App Icon", systemImage: "app.dashed")
                     }
+                    #endif
+                    Toggle(isOn: $hideFeedSwitcher) {
+                        Label("Hide Feed Switcher", systemImage: "chevron.down.circle")
+                    }
                 }
             }
-            #endif
+
+            Section("Feeds") {
+                Toggle(isOn: $persistFeed) {
+                    Label("Remember Selected Feed", systemImage: "square.stack")
+                }
+                Toggle(isOn: $persistSort) {
+                    Label("Remember Sort Order", systemImage: "arrow.up.arrow.down")
+                }
+            }
 
             Section("Playback Settings") {
                 Toggle(isOn: $autoplay) {

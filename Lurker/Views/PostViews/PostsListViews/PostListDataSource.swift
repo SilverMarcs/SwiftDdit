@@ -18,7 +18,7 @@ import SwiftUI
 
     init(feedType: PostFeedType) {
         self.feedType = feedType
-        self.currentSort = feedType.defaultSort
+        self.currentSort = feedType.resolvedInitialSort()
     }
     
     func loadInitialPosts() async {

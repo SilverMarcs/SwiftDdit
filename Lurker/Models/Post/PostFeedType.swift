@@ -15,8 +15,13 @@ enum PostFeedType: Identifiable, Hashable {
     case saved
     case user(String) // username
 
-    /// The selectable front-page feeds shown in the Home tab's title menu.
+    /// The selectable front-page feeds shown in the Home tab's feed switcher.
     static let frontPageFeeds: [PostFeedType] = [.home, .popular, .all]
+
+    /// Reconstruct a front-page feed from its persisted `id` string.
+    static func frontPageFeed(id: String) -> PostFeedType? {
+        frontPageFeeds.first { $0.id == id }
+    }
 
     var id: String {
         switch self {
@@ -58,7 +63,7 @@ enum PostFeedType: Identifiable, Hashable {
         case .home:
             return "house"
         case .popular:
-            return "flame"
+            return "chart.line.uptrend.xyaxis"
         case .all:
             return "globe"
         case .subreddit:
@@ -88,6 +93,41 @@ enum PostFeedType: Identifiable, Hashable {
         case .home, .subreddit, .saved, .user:
             return .best
         }
+    }
+
+    /// The switchable front-page feeds (Home/Popular/All). Feed and sort
+    /// persistence are scoped to these.
+    var isFrontPage: Bool {
+        switch self {
+        case .home, .popular, .all:
+            return true
+        case .subreddit, .saved, .user:
+            return false
+        }
+    }
+
+    /// r/popular and r/all reject the `best` sort; every other feed accepts it.
+    var supportsBestSort: Bool {
+        switch self {
+        case .popular, .all:
+            return false
+        case .home, .subreddit, .saved, .user:
+            return true
+        }
+    }
+
+    /// The sort a fresh feed opens with. When sort persistence is enabled this
+    /// restores the last front-page sort (falling back to `defaultSort` if it's
+    /// missing or invalid for this feed, e.g. `best` on r/popular).
+    func resolvedInitialSort() -> SubListingSortOption {
+        guard isFrontPage,
+              UserDefaults.standard.bool(forKey: SettingsKeys.persistSort),
+              let id = UserDefaults.standard.string(forKey: SettingsKeys.lastSort),
+              let saved = SubListingSortOption.from(id: id) else {
+            return defaultSort
+        }
+        if case .best = saved, !supportsBestSort { return defaultSort }
+        return saved
     }
 
     /// Whether this feed type supports search functionality

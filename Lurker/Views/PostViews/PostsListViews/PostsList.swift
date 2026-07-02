@@ -11,11 +11,16 @@ struct PostsList: View {
     @Environment(\.isSearching) var isSearching
     @Environment(NavigationPathManager.self) var navigationManager
     @State private var dataSource: PostListDataSource
+    @AppStorage(SettingsKeys.persistSort) private var persistSort = false
+    @AppStorage(SettingsKeys.lastSort) private var lastSort = ""
+    @AppStorage(SettingsKeys.hideFeedSwitcher) private var hideFeedSwitcher = false
 
     private let feedType: PostFeedType
+    private let feedTypeSelection: Binding<PostFeedType>?
 
-    init(feedType: PostFeedType) {
+    init(feedType: PostFeedType, feedTypeSelection: Binding<PostFeedType>? = nil) {
         self.feedType = feedType
+        self.feedTypeSelection = feedTypeSelection
         self._dataSource = State(initialValue: PostListDataSource(feedType: feedType))
     }
 
@@ -71,12 +76,15 @@ struct PostsList: View {
             }
         }
         .onChange(of: dataSource.currentSort) {
+            if persistSort && feedType.isFrontPage {
+                lastSort = dataSource.currentSort.id
+            }
             Task {
                 await dataSource.loadInitialPosts()
             }
         }
         .toolbar {
-            PostListToolbar(feedType: feedType, selectedSort: $dataSource.currentSort)
+            PostListToolbar(feedType: feedType, selectedSort: $dataSource.currentSort, feedTypeSelection: hideFeedSwitcher ? nil : feedTypeSelection)
         }
         .if(feedType.supportsSearch) { view in
             view

@@ -84,6 +84,22 @@ enum SubListingSortOption: CaseIterable, Identifiable, Equatable {
     static var topOptions: [SubListingSortOption] {
         return TopTimePeriod.allCases.map { .top($0) }
     }
+
+    /// Inverse of `id` — reconstruct a sort option from its persisted string.
+    static func from(id: String) -> SubListingSortOption? {
+        switch id {
+        case "best": return .best
+        case "hot": return .hot
+        case "new": return .new
+        case "controversial": return .controversial
+        default:
+            guard id.hasPrefix("top_"),
+                  let period = TopTimePeriod(rawValue: String(id.dropFirst(4))) else {
+                return nil
+            }
+            return .top(period)
+        }
+    }
 }
 
 enum TopTimePeriod: String, CaseIterable, Identifiable {
