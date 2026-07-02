@@ -14,6 +14,7 @@
 /* Begin PBXFileReference section */
 		082991C52F8CADB6001C6CA6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		08846F642DFF0E1B009F6F77 /* Lurker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lurker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08BB05D02FF431F700B3F0D8 /* Lurker.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lurker.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -64,6 +65,7 @@
 		08846F5B2DFF0E1B009F6F77 = {
 			isa = PBXGroup;
 			children = (
+				08BB05D02FF431F700B3F0D8 /* Lurker.storekit */,
 				08846F662DFF0E1B009F6F77 /* Lurker */,
 				082991C42F8CADB6001C6CA6 /* Frameworks */,
 				08846F652DFF0E1B009F6F77 /* Products */,
@@ -285,7 +287,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = J52QUTREBS;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -320,7 +322,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.SwiftDdit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -345,7 +347,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = J52QUTREBS;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -380,7 +382,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SilverMarcs.SwiftDdit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

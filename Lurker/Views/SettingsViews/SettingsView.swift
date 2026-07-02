@@ -16,12 +16,29 @@ struct SettingsView: View {
     @AppStorage(SettingsKeys.persistSort) var persistSort: Bool = false
     @AppStorage(SettingsKeys.hideFeedSwitcher) var hideFeedSwitcher: Bool = false
     @State private var easterEggTapCount = 0
+    @State private var store = StoreManager.shared
+    @State private var showingSupporter = false
 
     var body: some View {
         Form {
             Section("Reddit Login") {
                 NavigationLink(value: SettingsRoute.accounts) {
                     Label("Accounts", systemImage: "person.fill")
+                }
+            }
+
+            Section {
+                Button {
+                    showingSupporter = true
+                } label: {
+                    Label {
+                        Text(store.isSupporter ? "Supporter" : "Support Lurker")
+                            .foregroundStyle(.primary)
+                    } icon: {
+                        Image(systemName: store.isSupporter ? "heart.fill" : "heart")
+                            .foregroundStyle(.pink)
+                    }
+                    // .badge(store.isSupporter ? Text("❤️") : nil)
                 }
             }
 
@@ -61,6 +78,7 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .navigationTitle("Settings")
         .toolbarTitleDisplayMode(isMacOrPad ? .inlineLarge : .inline)
+        .sheet(isPresented: $showingSupporter) { SupporterView() }
         .safeAreaInset(edge: .bottom) {
             Color.clear
                 .frame(height: 44)

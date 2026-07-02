@@ -37,6 +37,7 @@ struct ContentView: View {
         .tabViewStyle(.sidebarAdaptable)
         #endif
         .tabViewSearchActivation(.searchTabSelection)
+        .task { await StoreManager.shared.start() }
     }
 }
 

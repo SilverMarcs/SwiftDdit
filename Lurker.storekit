@@ -1,0 +1,77 @@
+{
+  "identifier" : "B3F1C2A4",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "10000000A2",
+      "localizations" : [
+        {
+          "description" : "An optional extra tip to support development.",
+          "displayName" : "Generous Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.SilverMarcs.SwiftDdit.generoustip",
+      "referenceName" : "Generous Tip",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6762110921",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 0,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "20000000",
+      "localizations" : [
+
+      ],
+      "name" : "Lurker Supporter",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "20000001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly support for Lurker's development.",
+              "displayName" : "Lurker Supporter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.SilverMarcs.SwiftDdit.supporter.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Lurker Supporter Monthly",
+          "subscriptionGroupID" : "20000000",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
