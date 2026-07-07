@@ -21,7 +21,7 @@ struct UserSubredditsView: View {
             if !favoriteSubreddits.isEmpty {
                 Section("Favorites") {
                     ForEach(favoriteSubreddits, id: \.id) { subreddit in
-                        SubredditRowView(subreddit: subreddit)
+                        SubredditRowView(subreddit: subreddit, showsFavoriteButton: true)
                     }
                 }
                 .sectionIndexLabel("★")
@@ -31,7 +31,7 @@ struct UserSubredditsView: View {
                 Section(letter) {
                     if let subredditsInSection = groupedSubreddits[letter] {
                         ForEach(subredditsInSection.sorted { $0.displayName < $1.displayName }, id: \.id) { subreddit in
-                            SubredditRowView(subreddit: subreddit)
+                            SubredditRowView(subreddit: subreddit, showsFavoriteButton: true)
                         }
                     }
                 }

@@ -10,6 +10,7 @@ import SwiftMediaViewer
 
 struct SubredditRowView: View {
     let subreddit: Subreddit
+    var showsFavoriteButton = false
 
     @Environment(NavigationPathManager.self) var navigationManager
     @State private var favorites = FavoritesManager.shared
@@ -35,19 +36,21 @@ struct SubredditRowView: View {
                             .foregroundStyle(subreddit.color ?? .secondary)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(.rect)
             }
             .buttonStyle(.plain)
 
-            Spacer(minLength: 0)
-
-            Button {
-                withAnimation(.smooth) { favorites.toggle(subreddit) }
-            } label: {
-                Image(systemName: favorites.isFavorite(subreddit) ? "star.fill" : "star")
-                    .foregroundStyle(favorites.isFavorite(subreddit) ? .yellow : .secondary)
-                    .contentShape(.rect)
+            if showsFavoriteButton {
+                Button {
+                    withAnimation(.smooth) { favorites.toggle(subreddit) }
+                } label: {
+                    Image(systemName: favorites.isFavorite(subreddit) ? "star.fill" : "star")
+                        .foregroundStyle(favorites.isFavorite(subreddit) ? .yellow : .secondary)
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.borderless)
             }
-            .buttonStyle(.borderless)
         }
     }
 }
