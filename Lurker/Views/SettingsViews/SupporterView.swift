@@ -33,6 +33,11 @@ struct SupporterView: View {
                 }
 
                 Section("Leave a Tip") {
+                    ProductView(id: StoreManager.smallTipProductID) {
+                        productIcon("cup.and.saucer.fill", tint: .brown)
+                    }
+                    .productViewStyle(ProminentPriceProductStyle())
+
                     ProductView(id: StoreManager.generousTipProductID) {
                         productIcon("cup.and.saucer.fill", tint: .orange)
                     }
@@ -44,6 +49,25 @@ struct SupporterView: View {
                         Task { await store.restore() }
                     }
                 }
+
+                // Required by App Store Guideline 3.1.2(c) for the auto-renewing
+                // Supporter subscription: functional links to the privacy policy
+                // and Terms of Use (EULA) must be present in the purchase flow.
+                // We use Apple's standard EULA; the subscription's title, length,
+                // and price are shown by ProductView above.
+                Section {
+                    Link("Privacy Policy",
+                         destination: URL(string: "https://appstore-support.vercel.app/lurker/privacy")!)
+                    Link("Terms of Use (EULA)",
+                         destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                } footer: {
+                    Text("Lurker Supporter is a \(Text("$3.99/month").fontWeight(.semibold)) auto-renewing subscription. Payment is charged to your Apple Account at confirmation. It renews automatically unless cancelled at least 24 hours before the end of the current period; manage or cancel in your Apple Account settings.")
+                }
+                // The app installs a global `openURL` interceptor (URLHandlingModifier)
+                // that routes taps to an in-app browser; it silently swallows these
+                // external links from inside this sheet. Force the system browser so
+                // the required legal links are always functional (Guideline 3.1.2c).
+                .environment(\.openURL, OpenURLAction { _ in .systemAction })
             }
             .contentMargins(.top, 10)
             .onInAppPurchaseCompletion { _, result in
@@ -100,10 +124,10 @@ struct SupporterView: View {
 /// price as a filled, prominent button instead of the default plain text.
 private struct ProminentPriceProductStyle: ProductViewStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 12) {
-            configuration.icon
+        if let product = configuration.product {
+            HStack(spacing: 12) {
+                configuration.icon
 
-            if let product = configuration.product {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(product.displayName)
                         .font(.headline)
@@ -128,14 +152,13 @@ private struct ProminentPriceProductStyle: ProductViewStyle {
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
                 }
-            } else {
-                // Product still loading (or unavailable).
-                Text("Loading…")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer(minLength: 8)
-                ProgressView()
             }
+        } else {
+            // Still loading (or unavailable): a plain centered spinner instead of
+            // StoreKit's redacted placeholder. Fixed height keeps the row from
+            // jumping when the real product content swaps in.
+            ProgressView()
+                .frame(maxWidth: .infinity, minHeight: 44)
         }
     }
 }

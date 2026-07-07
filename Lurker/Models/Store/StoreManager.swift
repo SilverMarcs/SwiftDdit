@@ -19,6 +19,7 @@ final class StoreManager {
     @ObservationIgnored static let shared = StoreManager()
 
     static let supporterMonthlyID = "com.SilverMarcs.SwiftDdit.supporter.monthly"
+    static let smallTipProductID = "com.SilverMarcs.SwiftDdit.smalltip"
     static let generousTipProductID = "com.SilverMarcs.SwiftDdit.generoustip"
 
     /// Cached so the badge is correct at launch before the async StoreKit check

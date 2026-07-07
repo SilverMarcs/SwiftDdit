@@ -5,6 +5,21 @@
   ],
   "products" : [
     {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "10000000A3",
+      "localizations" : [
+        {
+          "description" : "A small tip to support development.",
+          "displayName" : "Small Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.SilverMarcs.SwiftDdit.smalltip",
+      "referenceName" : "Small Tip",
+      "type" : "Consumable"
+    },
+    {
       "displayPrice" : "4.99",
       "familyShareable" : false,
       "internalID" : "10000000A2",
