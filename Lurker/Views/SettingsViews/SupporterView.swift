@@ -25,12 +25,18 @@ struct SupporterView: View {
                         .listRowBackground(Color.clear)
                 }
 
+                // DISABLED for this release to clear the 3.1.2(c) rejection.
+                // Re-enable together with the legal-links section below next
+                // update — ideally via SubscriptionStoreView, which renders the
+                // required title/length/price + Terms/Privacy links itself.
+                /*
                 Section("Monthly Support") {
                     ProductView(id: StoreManager.supporterMonthlyID) {
                         productIcon("heart.fill", tint: .pink)
                     }
                     .productViewStyle(ProminentPriceProductStyle())
                 }
+                */
 
                 Section("Leave a Tip") {
                     ProductView(id: StoreManager.smallTipProductID) {
@@ -50,11 +56,10 @@ struct SupporterView: View {
                     }
                 }
 
-                // Required by App Store Guideline 3.1.2(c) for the auto-renewing
-                // Supporter subscription: functional links to the privacy policy
-                // and Terms of Use (EULA) must be present in the purchase flow.
-                // We use Apple's standard EULA; the subscription's title, length,
-                // and price are shown by ProductView above.
+                // DISABLED with the subscription above. These legal links + the
+                // auto-renew disclosure are required only while the subscription
+                // is active (Guideline 3.1.2c). Re-enable both sections together.
+                /*
                 Section {
                     Link("Privacy Policy",
                          destination: URL(string: "https://appstore-support.vercel.app/lurker/privacy")!)
@@ -63,11 +68,12 @@ struct SupporterView: View {
                 } footer: {
                     Text("Lurker Supporter is a \(Text("$3.99/month").fontWeight(.semibold)) auto-renewing subscription. Payment is charged to your Apple Account at confirmation. It renews automatically unless cancelled at least 24 hours before the end of the current period; manage or cancel in your Apple Account settings.")
                 }
-                // The app installs a global `openURL` interceptor (URLHandlingModifier)
-                // that routes taps to an in-app browser; it silently swallows these
-                // external links from inside this sheet. Force the system browser so
-                // the required legal links are always functional (Guideline 3.1.2c).
+                // The app installs a global openURL interceptor (URLHandlingModifier)
+                // that routes external link taps into an in-app browser and swallows
+                // them from inside this sheet. Force the system browser so the
+                // required legal links always open.
                 .environment(\.openURL, OpenURLAction { _ in .systemAction })
+                */
             }
             .contentMargins(.top, 10)
             .onInAppPurchaseCompletion { _, result in
