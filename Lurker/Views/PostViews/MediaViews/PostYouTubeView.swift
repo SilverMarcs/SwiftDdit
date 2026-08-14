@@ -18,6 +18,7 @@ struct PostYouTubeView: View {
     let galleryImage: GalleryImage
 
     @State private var showsPlayer = false
+    @State private var isVisible = true
     @State private var page: WebPage
 
     init(videoID: String, galleryImage: GalleryImage) {
@@ -38,6 +39,22 @@ struct PostYouTubeView: View {
                 .webViewBackForwardNavigationGestures(.disabled)
                 .task(id: loadKey) {
                     await loadPlayerHTML()
+                }
+                .onScrollVisibilityChange(threshold: 0.1) { isVisible in
+                    self.isVisible = isVisible
+
+                    if !isVisible {
+                        Task { @MainActor in
+                            await pausePlayer()
+                        }
+                    }
+                }
+                .onDisappear {
+                    isVisible = false
+                    page.stopLoading()
+                    Task { @MainActor in
+                        await pausePlayer()
+                    }
                 }
                 .aspectRatio(galleryImage.aspectRatio ?? 16.0 / 9.0, contentMode: .fit)
                 .clipShape(.rect(cornerRadius: 12))
@@ -75,7 +92,7 @@ struct PostYouTubeView: View {
         <script src="https://www.youtube.com/iframe_api"></script>
         <script>
         var player;
-        var shouldPlay = \(autoplay || showsPlayer ? "true" : "false");
+        var shouldPlay = false;
         var shouldMute = \(muteOnPlay ? "true" : "false");
 
         function onYouTubeIframeAPIReady() {
@@ -83,7 +100,7 @@ struct PostYouTubeView: View {
                 videoId: '\(videoID)',
                 playerVars: {
                     playsinline: 1,
-                    autoplay: \(autoplay ? 1 : 0),
+                    autoplay: 0,
                     mute: \(muteOnPlay ? 1 : 0),
                     rel: 0,
                     origin: 'https://www.youtube-nocookie.com',
@@ -113,6 +130,13 @@ struct PostYouTubeView: View {
                 player.playVideo();
             }
         };
+
+        window.__lurkerPause = function() {
+            shouldPlay = false;
+            if (player && player.pauseVideo) {
+                player.pauseVideo();
+            }
+        };
         </script>
         </body>
         </html>
@@ -120,6 +144,12 @@ struct PostYouTubeView: View {
 
         do {
             for try await _ in page.load(html: html, baseURL: baseURL) {}
+
+            guard !Task.isCancelled, isVisible else {
+                await pausePlayer()
+                return
+            }
+
             _ = try? await page.callJavaScript(
                 "window.__lurkerPlay && window.__lurkerPlay();",
                 arguments: [:],
@@ -127,10 +157,25 @@ struct PostYouTubeView: View {
                 contentWorld: nil
             )
         } catch {
+            guard !Task.isCancelled, isVisible else {
+                await pausePlayer()
+                return
+            }
+
             if let url = URL(string: "https://www.youtube.com/watch?v=\(videoID)") {
                 openURL(url)
             }
         }
+    }
+
+    @MainActor
+    private func pausePlayer() async {
+        _ = try? await page.callJavaScript(
+            "window.__lurkerPause && window.__lurkerPause();",
+            arguments: [:],
+            in: nil,
+            contentWorld: nil
+        )
     }
 }
 
