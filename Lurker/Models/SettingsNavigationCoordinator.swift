@@ -12,4 +12,5 @@ struct SettingsDestination: Hashable {}
 enum SettingsRoute: Hashable {
     case accounts
     case appIcon
+    case filters
 }

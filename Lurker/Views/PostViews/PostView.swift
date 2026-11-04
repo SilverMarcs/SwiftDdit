@@ -172,6 +172,8 @@ struct PostView: View {
                }
              }
 
+             PostFilterMenuSection(post: post)
+
              if !isCompact {
                  Button {
                      showTextSelection.toggle()

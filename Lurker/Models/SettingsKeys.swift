@@ -17,4 +17,7 @@ enum SettingsKeys {
     static let lastSort    = "lastSortSelection"
     /// Easter-egg gated: hide the feed switcher from the feed toolbar.
     static let hideFeedSwitcher = "hideFeedSwitcher"
+    /// App-only feed filters managed by `FilterManager`.
+    static let filteredSubreddits = "filteredSubreddits"
+    static let filteredUsers      = "filteredUsers"
 }

@@ -71,7 +71,7 @@ struct PostsList: View {
             await dataSource.refreshPosts()
         }
         .task {
-            if dataSource.posts.isEmpty {
+            if dataSource.fetchedPosts.isEmpty {
                 await dataSource.loadInitialPosts()
             }
         }
