@@ -47,12 +47,14 @@ struct Post: Identifiable, Hashable, Equatable, Votable {
         hasher.combine(title)
     }
     
-    init(from postData: PostData) {
+    /// - Parameter subredditDetail: Overrides `postData.sr_detail`, for endpoints
+    ///   (like `/api/info`) that don't honor `sr_detail=1`.
+    init(from postData: PostData, subredditDetail: SubredditDetail? = nil) {
         self.id = postData.id
         self.title = postData.title
         self.author = postData.author
-        
-        if let srDetail = postData.sr_detail {
+
+        if let srDetail = subredditDetail ?? postData.sr_detail {
             self.subreddit = Subreddit(detail: srDetail)
         } else {
             self.subreddit = Subreddit(

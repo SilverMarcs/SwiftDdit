@@ -9,32 +9,38 @@ import Foundation
 
 extension RedditAPI {
     static func fetchPosts(for feedType: PostFeedType, sort: SubListingSortOption = .best, after: String? = nil, limit: Int = 10) async -> ([Post], String?)? {
-        guard let url = buildPostsURL(for: feedType, sort: sort, after: after, limit: limit) else { return nil }
-        return await fetchPostsFromURL(url: url)
-    }
-    
-    // MARK: - Private Helper Methods
-    
-    private static func buildPostsURL(for feedType: PostFeedType, sort: SubListingSortOption, after: String?, limit: Int) -> URL? {
         guard let endpoint = buildEndpoint(for: feedType, sort: sort) else { return nil }
-        
+        let queryItems = buildQueryItems(sort: sort, after: after, limit: limit)
+
         var components = URLComponents(string: "\(Self.baseURL)\(endpoint).json")
-        components?.queryItems = [
+        components?.queryItems = queryItems
+        guard let url = components?.url else { return nil }
+
+        // Reddit blocks some .json listings (hot/new/rising, r/all) even when
+        // logged in; fetchListing falls back to old.reddit.com for those.
+        let kind = "\(listingScope(for: feedType))/\(sort.apiPath.lowercased())"
+        return await fetchListing(endpoint: endpoint, kind: kind, jsonURL: url, queryItems: queryItems)
+    }
+
+    // MARK: - Private Helper Methods
+
+    private static func buildQueryItems(sort: SubListingSortOption, after: String?, limit: Int) -> [URLQueryItem] {
+        var queryItems = [
             URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "raw_json", value: "1"),
             URLQueryItem(name: "sr_detail", value: "1")
         ]
-        
+
         if let after = after {
-            components?.queryItems?.append(URLQueryItem(name: "after", value: after))
+            queryItems.append(URLQueryItem(name: "after", value: after))
         }
-        
+
         // Add time parameter for top sorting
         if let timeParam = sort.timeParameter {
-            components?.queryItems?.append(URLQueryItem(name: "t", value: timeParam))
+            queryItems.append(URLQueryItem(name: "t", value: timeParam))
         }
-        
-        return components?.url
+
+        return queryItems
     }
     
     static private func buildEndpoint(for feedType: PostFeedType, sort: SubListingSortOption) -> String? {
@@ -66,19 +72,19 @@ extension RedditAPI {
         }
     }
     
-    private static func fetchPostsFromURL(url: URL) async -> ([Post], String?)? {
-        guard let listingResponse = await performAuthenticatedRequest(url: url, responseType: PostListingResponse.self) else {
-            return nil
+    /// The kind of listing, without user-specific parts (subreddit or user
+    /// names), so a block on one subreddit's listing applies to all of them.
+    private static func listingScope(for feedType: PostFeedType) -> String {
+        switch feedType {
+        case .home: "home"
+        case .popular: "popular"
+        case .all: "all"
+        case .subreddit: "subreddit"
+        case .saved: "saved"
+        case .user: "user"
         }
-        
-        let posts = listingResponse.data.children.compactMap { child -> Post? in
-            guard child.kind == "t3" else { return nil }
-            return Post(from: child.data)
-        }
-        
-        return (posts, listingResponse.data.after)
     }
-    
+
     // MARK: - Post Actions
     
     @discardableResult

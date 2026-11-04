@@ -73,11 +73,22 @@ enum RedditAPI {
     static internal func performRequest<T: Codable>(_ request: URLRequest, responseType: T.Type, endpoint: String) async -> T? {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return nil }
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                debugLog("GET \(endpoint) — status=\((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                return nil
+            }
             return try JSONDecoder().decode(responseType, from: data)
         } catch {
+            debugLog("GET \(endpoint) — error=\(error)")
             return nil
         }
+    }
+
+    /// Prints only in debug builds, so release builds stay quiet.
+    static func debugLog(_ message: @autoclosure () -> String) {
+        #if DEBUG
+        print("[RedditAPI] \(message())")
+        #endif
     }
 
     static internal func performSimpleRequest<T: Codable>(_ request: URLRequest, responseType: T.Type) async -> T? {
