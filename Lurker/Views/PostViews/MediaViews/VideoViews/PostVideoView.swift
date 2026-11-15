@@ -19,8 +19,13 @@ struct PostVideoView: View {
 
     var body: some View {
         Group {
-            if showVideo {
-                SMVVideo(videoURL: videoURL, autoplay: true, muteOnPlay: muteOnPlay)
+            if autoplay || showVideo {
+                PostVideoPlayerView(
+                    videoURL: videoURL,
+                    playbackDelay: autoplay ? .seconds(1) : .zero,
+                    muteOnPlay: muteOnPlay
+                )
+                .id(videoURL)
             } else {
                 Button(action: {
                     showVideo = true
@@ -35,15 +40,7 @@ struct PostVideoView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .task {
-                    guard autoplay else { return }
-                    do {
-                        try await Task.sleep(for: .seconds(1))
-                    } catch {
-                        return
-                    }
-                    showVideo = true
-                }
+                .accessibilityLabel("Play video")
             }
         }
         .clipShape(.rect(cornerRadius: 12))
