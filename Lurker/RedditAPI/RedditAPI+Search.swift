@@ -13,13 +13,14 @@ extension RedditAPI {
     
     private static func performSearch<T: Codable>(
         query: String,
+        baseURL: String,
         endpoint: String,
         queryItems: [URLQueryItem],
         responseType: T.Type
     ) async -> T? {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
 
-        var components = URLComponents(string: "\(Self.baseURL)/\(endpoint).json")
+        var components = URLComponents(string: "\(baseURL)/\(endpoint).json")
         components?.queryItems = queryItems
         
         guard let url = components?.url else { return nil }
@@ -38,6 +39,7 @@ extension RedditAPI {
         
         guard let listingResponse: SubredditListing = await performSearch(
             query: query,
+            baseURL: "https://old.reddit.com",
             endpoint: "subreddits/search",
             queryItems: queryItems,
             responseType: SubredditListing.self
@@ -69,6 +71,7 @@ extension RedditAPI {
         
         guard let listingResponse: PostListing = await performSearch(
             query: query,
+            baseURL: Self.baseURL,
             endpoint: endpoint,
             queryItems: queryItems,
             responseType: PostListing.self
