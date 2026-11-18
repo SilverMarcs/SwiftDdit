@@ -25,7 +25,7 @@ struct PostVideoView: View {
                 SMVVideo(
                     videoURL: videoURL,
                     autoplay: true,
-                    autoplayDelay: autoplay ? .milliseconds(500) : .zero,
+                    autoplayDelay: autoplay ? .milliseconds(300) : .zero,
                     muteOnPlay: muteOnPlay,
                     viewer: .custom(itemID: videoURL) { route in
                         navigationManager.path.append(route)
