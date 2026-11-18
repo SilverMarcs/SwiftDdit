@@ -53,7 +53,7 @@ extension Post {
             
             let dimensions = (videoPreview.width != nil && videoPreview.height != nil) ? 
                 CGSize(width: videoPreview.width!, height: videoPreview.height!) : nil
-            let (thumbnailURL, _) = extractHighQualityImageWithDimensions(from: data)
+            let thumbnailURL = extractVideoPosterURL(from: data)
             let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions, thumbnailURL: thumbnailURL)
             
             // Prefetch video thumbnail immediately
@@ -67,7 +67,7 @@ extension Post {
             
             let dimensions = (redditVideo.width != nil && redditVideo.height != nil) ? 
                 CGSize(width: redditVideo.width!, height: redditVideo.height!) : nil
-            let (thumbnailURL, _) = extractHighQualityImageWithDimensions(from: data)
+            let thumbnailURL = extractVideoPosterURL(from: data)
             let mediaType = MediaType.video(videoURL: hlsURL, dimensions: dimensions, thumbnailURL: thumbnailURL)
             
             // Prefetch video thumbnail immediately
@@ -194,6 +194,26 @@ extension Post {
         return .none
     }
     
+    /// Poster frame for a Reddit-hosted video.
+    ///
+    /// Reddit hosts video frames on `external-preview.redd.it`, which the general
+    /// image extractor skips. Those frames match the video's own resolution, unlike
+    /// the ~140px `thumbnail`, so this prefers the smallest rendition wide enough for the feed.
+    static func extractVideoPosterURL(from data: PostData) -> String? {
+        if let image = data.preview?.images?.first {
+            let feedWidth = 1080
+            let candidates = (image.resolutions ?? []) + [image.source].compactMap(\.self)
+            let poster = candidates
+                .filter { ($0.width ?? 0) >= feedWidth }
+                .min { ($0.width ?? 0) < ($1.width ?? 0) }
+                ?? image.source
+            if let url = poster?.url, !url.isEmpty {
+                return url.replacing("&amp;", with: "&")
+            }
+        }
+        return extractHighQualityImageWithDimensions(from: data).url
+    }
+
     /// Extract high-quality image URL with dimensions from PostData
     private static func extractHighQualityImageWithDimensions(from data: PostData) -> (url: String?, dimensions: CGSize?) {
         var imageURL: String? = nil

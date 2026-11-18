@@ -22,7 +22,8 @@ struct PostVideoView: View {
             if autoplay || showVideo {
                 PostVideoPlayerView(
                     videoURL: videoURL,
-                    playbackDelay: autoplay ? .seconds(1) : .zero,
+                    posterURL: URL(string: thumbnailURL ?? ""),
+                    playbackDelay: autoplay ? .milliseconds(500) : .zero,
                     muteOnPlay: muteOnPlay
                 )
                 .id(videoURL)
@@ -30,7 +31,7 @@ struct PostVideoView: View {
                 Button(action: {
                     showVideo = true
                 }) {
-                    CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 450)
+                    CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 1000)
                         .overlay(
                             Image(systemName: "play.fill")
                                 .imageScale(.large)

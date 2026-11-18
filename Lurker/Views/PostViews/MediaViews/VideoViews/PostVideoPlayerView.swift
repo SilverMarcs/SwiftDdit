@@ -1,8 +1,10 @@
 import AVKit
+import SwiftMediaViewer
 import SwiftUI
 
 struct PostVideoPlayerView: View {
     let videoURL: String
+    let posterURL: URL?
     let playbackDelay: Duration
     let muteOnPlay: Bool
 
@@ -12,7 +14,12 @@ struct PostVideoPlayerView: View {
 
     var body: some View {
         InlineVideoPlayer(player: playback.player)
-            .background(.black)
+            // The player layer stays transparent until its first frame, so the poster shows while it loads.
+            .background {
+                CachedAsyncImage(url: posterURL, targetSize: 1000) {
+                    Color.black
+                }
+            }
             .allowsHitTesting(false)
             .matchedTransitionSource(id: videoURL, in: transition)
             .overlay {
