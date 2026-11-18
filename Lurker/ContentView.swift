@@ -36,6 +36,9 @@ struct ContentView: View {
         #if !os(macOS)
         .tabViewStyle(.sidebarAdaptable)
         #endif
+        #if os(iOS)
+        .tabBarMinimizeBehavior(.onScrollDown)
+        #endif
         .tabViewSearchActivation(.searchTabSelection)
         .task { await StoreManager.shared.start() }
     }
