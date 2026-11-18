@@ -15,6 +15,8 @@ struct PostView: View {
     @State private var isSaved: Bool
     @State private var showTextSelection: Bool = false
     @State private var showCommentSheet = false
+    /// Counts save taps so each one plays the save haptic.
+    @State private var saveTaps = 0
     @Namespace private var transition
 
     @Environment(NavigationPathManager.self) var navigationManager
@@ -208,6 +210,10 @@ struct PostView: View {
                  #endif
              }
          }
+         #if os(iOS)
+         // A touch lighter than the vote buttons' full-strength light impact.
+         .sensoryFeedback(.impact(weight: .light, intensity: 0.6), trigger: saveTaps)
+         #endif
     }
 
     func toggleSave() async {
@@ -219,6 +225,7 @@ struct PostView: View {
 
     var toggleSaveButton: some View {
         Button {
+            saveTaps += 1
             Task {
               await toggleSave()
             }
