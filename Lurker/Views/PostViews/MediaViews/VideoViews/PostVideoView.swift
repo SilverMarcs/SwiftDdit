@@ -10,7 +10,6 @@ struct PostVideoView: View {
     let thumbnailURL: String?
     
     @State private var showVideo = false
-    @Environment(NavigationPathManager.self) private var navigationManager
 
     private static func safeAspectRatio(from dimensions: CGSize?) -> CGFloat {
         guard let d = dimensions, d.width > 0, d.height > 0 else { return 16.0 / 9.0 }
@@ -27,9 +26,7 @@ struct PostVideoView: View {
                     autoplay: true,
                     autoplayDelay: autoplay ? .milliseconds(300) : .zero,
                     muteOnPlay: muteOnPlay,
-                    viewer: .custom(itemID: videoURL) { route in
-                        navigationManager.path.append(route)
-                    }
+                    viewer: .custom(itemID: videoURL)
                 )
                 .background {
                     CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 1000) {
