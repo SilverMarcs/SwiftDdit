@@ -5,11 +5,13 @@
 //  Created by Zabir Raihan on 18/06/2025.
 //
 
+import SwiftMediaViewer
 import SwiftUI
 
 extension View {
     func navigationDestinations() -> some View {
         self
+            .smvVideoViewerDestination()
             .navigationDestination(for: PostFeedType.self) { feedType in
                 PostsList(feedType: feedType)
             }

@@ -10,7 +10,8 @@ struct PostVideoView: View {
     let thumbnailURL: String?
     
     @State private var showVideo = false
-    
+    @Environment(NavigationPathManager.self) private var navigationManager
+
     private static func safeAspectRatio(from dimensions: CGSize?) -> CGFloat {
         guard let d = dimensions, d.width > 0, d.height > 0 else { return 16.0 / 9.0 }
         let ratio = d.width / d.height
@@ -20,12 +21,21 @@ struct PostVideoView: View {
     var body: some View {
         Group {
             if autoplay || showVideo {
-                PostVideoPlayerView(
+                // The poster is drawn here rather than by SMVVideo, to keep it at feed-image resolution.
+                SMVVideo(
                     videoURL: videoURL,
-                    posterURL: URL(string: thumbnailURL ?? ""),
-                    playbackDelay: autoplay ? .milliseconds(500) : .zero,
-                    muteOnPlay: muteOnPlay
+                    autoplay: true,
+                    autoplayDelay: autoplay ? .milliseconds(500) : .zero,
+                    muteOnPlay: muteOnPlay,
+                    viewer: .custom(itemID: videoURL) { route in
+                        navigationManager.path.append(route)
+                    }
                 )
+                .background {
+                    CachedAsyncImage(url: URL(string: thumbnailURL ?? ""), targetSize: 1000) {
+                        Color.black
+                    }
+                }
                 .id(videoURL)
             } else {
                 Button(action: {
