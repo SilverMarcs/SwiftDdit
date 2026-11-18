@@ -41,7 +41,7 @@ struct PostVideoPlayerTests {
         model.unload()
         await load.value
         #expect(model.player == nil)
-        #expect(player.items().isEmpty)
+        #expect(player.currentItem == nil)
     }
 
     @Test func unloadCancelsPreparationAndAllowsAnotherVideo() async throws {
@@ -57,7 +57,19 @@ struct PostVideoPlayerTests {
         let newPlayer = try #require(model.player)
         #expect(newPlayer !== oldPlayer)
         #expect(!newPlayer.isMuted)
-        #expect(oldPlayer.items().isEmpty)
+        #expect(oldPlayer.currentItem == nil)
+    }
+
+    @Test func playbackLoopsBackToTheStart() async throws {
+        let url = try #require(Bundle.module.url(forResource: "clip", withExtension: "mp4"))
+        let model = PostVideoPlayer()
+        defer { model.unload() }
+        await model.load(videoURL: url.absoluteString, muteOnPlay: true, playbackDelay: .zero)
+        let player = try #require(model.player)
+        // The fixture is 2s long: reach its end, then see playback restart and keep going.
+        try await waitUntil { player.currentTime().seconds > 1.5 }
+        try await waitUntil { (0.1..<1.0).contains(player.currentTime().seconds) }
+        #expect(player.rate > 0)
     }
 
     private func waitUntil(_ condition: () -> Bool) async throws {
