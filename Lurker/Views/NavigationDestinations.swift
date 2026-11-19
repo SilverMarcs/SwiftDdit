@@ -38,6 +38,8 @@ extension View {
                     #else
                     EmptyView()
                     #endif
+                case .filters:
+                    FilteredContentView()
                 }
             }
     }

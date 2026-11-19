@@ -62,6 +62,9 @@ struct SettingsView: View {
                 Toggle(isOn: $persistSort) {
                     Label("Remember Sort Order", systemImage: "arrow.up.arrow.down")
                 }
+                NavigationLink(value: SettingsRoute.filters) {
+                    Label("Filtered Subreddits & Users", systemImage: "line.3.horizontal.decrease.circle")
+                }
             }
 
             Section("Playback Settings") {
